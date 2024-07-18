@@ -11,7 +11,7 @@ const BasisPengetahuan = db.define(
       primaryKey: true,
       autoIncrement: true,
     },
-    basis_pengetahuan: {
+    kode_basis_pengetahuan: {
       type: DataTypes.STRING,
     },
     id_penyakit: {

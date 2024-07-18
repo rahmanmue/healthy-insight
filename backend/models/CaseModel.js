@@ -1,22 +1,20 @@
 import { DataTypes } from "sequelize";
 import db from "../config/db.js";
 import Gejala from "./GejalaModel.js";
-import Penyakit from "./PenyakitModel.js";
 
-const Revise = db.define(
-  "revise",
+const Case = db.define(
+  "case",
   {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
     },
-    id_penyakit: {
-      type: DataTypes.INTEGER,
-      references: {
-        model: Penyakit,
-        key: "id",
-      },
+    kode_case: {
+      type: DataTypes.STRING,
+    },
+    kode_basis_pengetahuan: {
+      type: DataTypes.STRING,
     },
     id_gejala: {
       type: DataTypes.INTEGER,
@@ -25,8 +23,14 @@ const Revise = db.define(
         key: "id",
       },
     },
+    nilai_bobot: {
+      type: DataTypes.INTEGER,
+    },
     nilai_diagnosis: {
       type: DataTypes.FLOAT,
+    },
+    id_solusi: {
+      type: DataTypes.INTEGER,
     },
   },
   {
@@ -35,4 +39,6 @@ const Revise = db.define(
   }
 );
 
-export default Revise;
+Case.belongsToMany(Gejala, { through: "case_gejala" });
+
+export default Case;

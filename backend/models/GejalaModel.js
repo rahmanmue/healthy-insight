@@ -13,7 +13,7 @@ const Gejala = db.define(
       type: DataTypes.STRING,
     },
     nilai_bobot: {
-      type: DataTypes.FLOAT,
+      type: DataTypes.INTEGER,
     },
   },
   {

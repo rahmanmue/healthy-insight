@@ -10,9 +10,6 @@ const Solusi = db.define(
       primaryKey: true,
       autoIncrement: true,
     },
-    solusi: {
-      type: DataTypes.STRING,
-    },
     id_penyakit: {
       type: DataTypes.INTEGER,
     },
@@ -21,6 +18,9 @@ const Solusi = db.define(
     },
     persentase_akhir: {
       type: DataTypes.FLOAT,
+    },
+    solusi: {
+      type: DataTypes.TEXT,
     },
   },
   {
