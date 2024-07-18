@@ -2,12 +2,14 @@ import express from "express";
 import db from "./config/db.js";
 import dotenv from "dotenv";
 import cors from "cors";
+import router from "./routes/index.js";
 import User from "./models/UserModel.js";
 import Penyakit from "./models/PenyakitModel.js";
 import Gejala from "./models/GejalaModel.js";
 import Solusi from "./models/SolusiModel.js";
-import Revise from "./models/ReviseModel.js";
+import Case from "./models/CaseModel.js";
 import BasisPengetahuan from "./models/BasisPengetahuanModel.js";
+import PerhitunganKNN from "./models/PerhitunganKNNModel.js";
 
 dotenv.config();
 
@@ -22,10 +24,7 @@ app.use(
 );
 
 app.use(express.json());
-
-app.get("/", (req, res) => {
-  res.send("Hello World!");
-});
+app.use(router);
 
 const connectDB = async () => {
   try {
