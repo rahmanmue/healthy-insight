@@ -1,5 +1,6 @@
 import {
   getAllBasisPengetahuan,
+  getBasisPengetahuanByKode,
   getBasisPengetahuanById,
   createBasisPengetahuan,
   updateBasisPengetahuan,
@@ -9,6 +10,15 @@ import {
 export const getBasisPengetahuan = async (req, res) => {
   try {
     const basisPengetahuan = await getAllBasisPengetahuan();
+    res.status(basisPengetahuan.status).json(basisPengetahuan.data);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const getAllBasisPengetahuanByKode = async (req, res) => {
+  try {
+    const basisPengetahuan = await getBasisPengetahuanByKode(req.params.kode);
     res.status(basisPengetahuan.status).json(basisPengetahuan.data);
   } catch (error) {
     res.status(500).json({ message: error.message });
