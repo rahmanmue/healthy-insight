@@ -9,7 +9,6 @@ import Gejala from "./models/GejalaModel.js";
 import Solusi from "./models/SolusiModel.js";
 import Case from "./models/CaseModel.js";
 import BasisPengetahuan from "./models/BasisPengetahuanModel.js";
-import PerhitunganKNN from "./models/PerhitunganKNNModel.js";
 
 dotenv.config();
 

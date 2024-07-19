@@ -17,6 +17,7 @@ import {
 
 import {
   getBasisPengetahuan,
+  getAllBasisPengetahuanByKode,
   getBasisPengetahuanByIdController,
   createBasisPengetahuanController,
   updateBasisPengetahuanController,
@@ -31,7 +32,7 @@ import {
   deleteCaseController,
 } from "../controllers/CaseController.js";
 
-import { createHitungKNNController } from "../controllers/HitungKNNController.js";
+import { getHasilHitungKNN } from "../controllers/HitungKNNController.js";
 
 import {
   getAllSolusiController,
@@ -56,6 +57,7 @@ router.put("/gejala/:id", updateGejalaController);
 router.delete("/gejala/:id", deleteGejalaController);
 
 router.get("/basis-pengetahuan", getBasisPengetahuan);
+router.get("/basis-pengetahuan/:kode", getAllBasisPengetahuanByKode);
 router.get("/basis-pengetahuan/:id", getBasisPengetahuanByIdController);
 router.post("/basis-pengetahuan", createBasisPengetahuanController);
 router.put("/basis-pengetahuan/:id", updateBasisPengetahuanController);
@@ -73,6 +75,6 @@ router.post("/solusi", createSolusiController);
 router.put("/solusi/:id", updateSolusiController);
 router.delete("/solusi/:id", deleteSolusiController);
 
-router.post("/hitung-knn", createHitungKNNController);
+router.post("/hitung-knn", getHasilHitungKNN);
 
 export default router;
