@@ -23,9 +23,6 @@ const Case = db.define(
         key: "id",
       },
     },
-    nilai_bobot: {
-      type: DataTypes.INTEGER,
-    },
     nilai_diagnosis: {
       type: DataTypes.FLOAT,
     },
@@ -39,6 +36,10 @@ const Case = db.define(
   }
 );
 
-Case.belongsToMany(Gejala, { through: "case_gejala" });
+Case.belongsToMany(Gejala, {
+  through: "case_gejala",
+  onDelete: "cascade",
+  onUpdate: "cascade",
+});
 
 export default Case;
