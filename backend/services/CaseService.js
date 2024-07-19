@@ -1,19 +1,86 @@
 import Case from "../models/CaseModel.js";
+import Gejala from "../models/GejalaModel.js";
 import { getHasilPerhitunganKNN } from "./HitungKNNService.js";
-import PerhitunganKNN from "../models/PerhitunganKNNModel.js";
+
+export const getGejalaFromCase = async (kode_case) => {
+  const one_case = await Case.findOne({
+    where: {
+      kode_case: kode_case,
+    },
+  });
+
+  const cases = await Case.findAll({
+    where: {
+      kode_case: kode_case,
+      kode_basis_pengetahuan: one_case.kode_basis_pengetahuan,
+    },
+  });
+
+  const gejala = cases.map((item) => {
+    return {
+      id_gejala: item.id_gejala,
+    };
+  });
+
+  return gejala;
+};
 
 export const getAllCase = async () => {
-  const case_data = await Case.findAll();
+  const kode_case = await Case.findAll({
+    attributes: ["kode_case"],
+    group: ["kode_case"],
+  });
+
+  const kode_basis_pengetahuan = await Case.findAll({
+    attributes: ["kode_basis_pengetahuan", "nilai_diagnosis", "id_solusi"],
+    group: ["kode_basis_pengetahuan"],
+  });
+
+  const allGejala = await Gejala.findAll({
+    attributes: ["id", "gejala"],
+  });
+
+  let cases = [];
+
+  for (let i = 0; i < kode_case.length; i++) {
+    const id_all_gejala = await getGejalaFromCase(kode_case[i].kode_case);
+
+    const gejala = id_all_gejala.map((item) => {
+      const gejala = allGejala.find((gejala) => gejala.id === item.id_gejala);
+      return {
+        id_gejala: gejala.id,
+        gejala: gejala.gejala,
+      };
+    });
+
+    let temp = [];
+    for (let j = 0; j < kode_basis_pengetahuan.length; j++) {
+      temp.push({
+        kode_basis_pengetahuan:
+          kode_basis_pengetahuan[j].kode_basis_pengetahuan,
+        // gejala: gejala,
+        nilai_diagnosis: kode_basis_pengetahuan[j].nilai_diagnosis,
+        id_solusi: kode_basis_pengetahuan[j].id_solusi,
+      });
+    }
+
+    cases.push({
+      kode_case: kode_case[i].kode_case,
+      gejala: gejala,
+      results: temp,
+    });
+  }
+
   return {
     status: 200,
-    data: case_data,
+    data: cases,
   };
 };
 
-export const getCaseByNoKasus = async (no_kasus) => {
-  const case_data = await Case.findOne({
+export const getCaseByKodeCase = async (kode_case) => {
+  const case_data = await Case.findAll({
     where: {
-      no_kasus: no_kasus,
+      kode_case: kode_case,
     },
   });
   return {
@@ -23,12 +90,12 @@ export const getCaseByNoKasus = async (no_kasus) => {
 };
 
 export const createCase = async (data) => {
-  const { results, final_result_case } = await getHasilPerhitunganKNN(data);
-  await Case.bulkCreate(final_result_case);
-  const res = await PerhitunganKNN.bulkCreate(results);
+  const { final_result_case } = await getHasilPerhitunganKNN(data);
+  const cases_data = await Case.bulkCreate(final_result_case);
+  const kode_case = cases_data[0].kode_case;
   return {
     status: 201,
-    data: res[0].kode_case,
+    data: kode_case,
     message: "Data successfully created",
   };
 };
