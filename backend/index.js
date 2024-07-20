@@ -3,12 +3,13 @@ import db from "./config/db.js";
 import dotenv from "dotenv";
 import cors from "cors";
 import router from "./routes/index.js";
-import User from "./models/UserModel.js";
-import Penyakit from "./models/PenyakitModel.js";
 import Gejala from "./models/GejalaModel.js";
-import Solusi from "./models/SolusiModel.js";
-import Case from "./models/CaseModel.js";
+import Penyakit from "./models/PenyakitModel.js";
 import BasisPengetahuan from "./models/BasisPengetahuanModel.js";
+import Case from "./models/CaseModel.js";
+import User from "./models/UserModel.js";
+import Solusi from "./models/SolusiModel.js";
+import "./models/Association.js";
 
 dotenv.config();
 
@@ -24,7 +25,6 @@ app.use(
 
 app.use(express.json());
 app.use(router);
-
 const connectDB = async () => {
   try {
     await db.sync();

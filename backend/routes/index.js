@@ -41,7 +41,24 @@ import {
   deleteSolusiController,
 } from "../controllers/SolusiController.js";
 
+import {
+  getAllUsers,
+  getUserByIdController,
+  updateUserController,
+  deleteUserController,
+} from "../controllers/UserController.js";
+
+import { loginUser, registerUser } from "../controllers/AuthController.js";
+
 const router = express.Router();
+
+router.post("/auth/login", loginUser);
+router.post("/auth/register", registerUser);
+
+router.get("/user", getAllUsers);
+router.get("/user/:id", getUserByIdController);
+router.patch("/user", updateUserController);
+router.delete("/user/:id", deleteUserController);
 
 router.get("/penyakit", getPenyakit);
 router.get("/penyakit/:id", getPenyakitByIdController);
@@ -58,7 +75,7 @@ router.delete("/gejala/:id", deleteGejalaController);
 router.get("/basis-pengetahuan", getAllBasisPengetahuanController);
 router.get("/basis-pengetahuan/:kode", getAllBasisPengetahuanByKode);
 router.post("/basis-pengetahuan", createBasisPengetahuanController);
-router.put("/basis-pengetahuan/gejala", updateBasisPengetahuanController);
+router.patch("/basis-pengetahuan/gejala", updateBasisPengetahuanController);
 router.delete("/basis-pengetahuan/:kode_bp", deleteBasisPengetahuanController);
 router.delete(
   "/basis-pengetahuan/gejala/:id",
