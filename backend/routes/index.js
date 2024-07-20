@@ -16,19 +16,18 @@ import {
 } from "../controllers/GejalaController.js";
 
 import {
-  getBasisPengetahuan,
+  getAllBasisPengetahuanController,
   getAllBasisPengetahuanByKode,
-  getBasisPengetahuanByIdController,
   createBasisPengetahuanController,
   updateBasisPengetahuanController,
   deleteBasisPengetahuanController,
+  deleteGejalaFromBasisPengetahuanController,
 } from "../controllers/BasisPengetahuanController.js";
 
 import {
   getAllCases,
   getCaseByNoKasusController,
   createCaseController,
-  updateCaseController,
   deleteCaseController,
 } from "../controllers/CaseController.js";
 
@@ -47,34 +46,36 @@ const router = express.Router();
 router.get("/penyakit", getPenyakit);
 router.get("/penyakit/:id", getPenyakitByIdController);
 router.post("/penyakit", createPenyakitController);
-router.put("/penyakit/:id", updatePenyakitController);
+router.put("/penyakit", updatePenyakitController);
 router.delete("/penyakit/:id", deletePenyakitController);
 
 router.get("/gejala", getGejala);
 router.get("/gejala/:id", getGejalaByIdController);
 router.post("/gejala", createGejalaController);
-router.put("/gejala/:id", updateGejalaController);
+router.put("/gejala", updateGejalaController);
 router.delete("/gejala/:id", deleteGejalaController);
 
-router.get("/basis-pengetahuan", getBasisPengetahuan);
+router.get("/basis-pengetahuan", getAllBasisPengetahuanController);
 router.get("/basis-pengetahuan/:kode", getAllBasisPengetahuanByKode);
-router.get("/basis-pengetahuan/:id", getBasisPengetahuanByIdController);
 router.post("/basis-pengetahuan", createBasisPengetahuanController);
-router.put("/basis-pengetahuan/:id", updateBasisPengetahuanController);
-router.delete("/basis-pengetahuan/:id", deleteBasisPengetahuanController);
+router.put("/basis-pengetahuan/gejala", updateBasisPengetahuanController);
+router.delete("/basis-pengetahuan/:kode_bp", deleteBasisPengetahuanController);
+router.delete(
+  "/basis-pengetahuan/gejala/:id",
+  deleteGejalaFromBasisPengetahuanController
+);
 
 router.get("/cases", getAllCases);
 router.get("/cases/:id", getCaseByNoKasusController);
 router.post("/cases", createCaseController);
-router.put("/cases/:id", updateCaseController);
-router.delete("/cases/:id", deleteCaseController);
+router.delete("/cases/:kode_case", deleteCaseController);
 
 router.get("/solusi", getAllSolusiController);
 router.get("/solusi/:id", getSolusiByIdController);
 router.post("/solusi", createSolusiController);
-router.put("/solusi/:id", updateSolusiController);
+router.put("/solusi", updateSolusiController);
 router.delete("/solusi/:id", deleteSolusiController);
 
-router.post("/hitung-knn", getHasilHitungKNN);
+router.get("/hitung-knn/:kode_case", getHasilHitungKNN);
 
 export default router;
