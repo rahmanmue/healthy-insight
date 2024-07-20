@@ -27,7 +27,7 @@ export const getGejalaFromCase = async (kode_case) => {
 
 export const getAllCase = async () => {
   const kode_case = await Case.findAll({
-    attributes: ["kode_case"],
+    attributes: ["kode_case", "name", "umur", "jenis_kelamin"],
     group: ["kode_case"],
   });
 
@@ -65,6 +65,9 @@ export const getAllCase = async () => {
 
     cases.push({
       kode_case: kode_case[i].kode_case,
+      name: kode_case[i].name,
+      umur: kode_case[i].umur,
+      jenis_kelamin: kode_case[i].jenis_kelamin,
       gejala: gejala,
       diagnosis: results,
     });
@@ -88,8 +91,8 @@ export const getCaseByKodeCase = async (kode_case) => {
   };
 };
 
-export const createCase = async (data) => {
-  const { final_result_case } = await getHasilPerhitunganKNN(data);
+export const createCase = async (data, dataGejala) => {
+  const { final_result_case } = await getHasilPerhitunganKNN(data, dataGejala);
   const cases_data = await Case.bulkCreate(final_result_case);
   const kode_case = cases_data[0].kode_case;
 

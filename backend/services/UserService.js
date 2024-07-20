@@ -2,7 +2,9 @@ import User from "../models/UserModel.js";
 import bcrypt from "bcrypt";
 
 export const getAllUser = async () => {
-  const user = await User.findAll();
+  const user = await User.findAll({
+    attributes: ["id", "username", "email", "role"],
+  });
   return {
     status: 200,
     data: user,
@@ -11,6 +13,7 @@ export const getAllUser = async () => {
 
 export const getUserById = async (id) => {
   const user = await User.findOne({
+    attributes: ["id", "username", "email", "role"],
     where: {
       id,
     },

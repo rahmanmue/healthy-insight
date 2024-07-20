@@ -9,7 +9,7 @@ const getInputData = async (data) => {
     attributes: ["id", "nilai_bobot"],
   });
 
-  const newData = data.map((item) => {
+  const newData = data?.map((item) => {
     const filtered = gejalaX.find((gejala) => {
       if (gejala.id === item.id_gejala) {
         return gejala;
@@ -78,9 +78,9 @@ const getIdSolusi = async (data) => {
   return { id_solusi, solusi };
 };
 
-export const getHasilPerhitunganKNN = async (dataInput) => {
+export const getHasilPerhitunganKNN = async (dataGejala, dataInput = {}) => {
   // setiap gejala dicocokan dengan basis pengetahuan
-  const data = await getInputData(dataInput);
+  const data = await getInputData(dataGejala);
 
   // 1. mencari basis pengetahuan untuk penyakit
   const basis_pengetahuan = await getBasisPengetahuanPenyakit();
@@ -161,6 +161,9 @@ export const getHasilPerhitunganKNN = async (dataInput) => {
 
       const filtered_result = {
         kode_case: kode_case,
+        name: dataInput.name ?? null,
+        umur: dataInput.umur ?? null,
+        jenis_kelamin: dataInput.jenis_kelamin ?? null,
         kode_basis_pengetahuan: results[i].kode_basis_pengetahuan,
         id_gejala: data[j].id_gejala,
         nilai_diagnosis: results[i].nilai_diagnosis,
