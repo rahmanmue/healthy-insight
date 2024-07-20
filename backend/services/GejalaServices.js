@@ -12,6 +12,7 @@ export const getAllGejala = async () => {
 
 export const getGejalaById = async (id) => {
   const gejala = await Gejala.findOne({
+    attributes: ["id", "gejala", "nilai_bobot"],
     where: {
       id,
     },

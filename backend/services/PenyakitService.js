@@ -12,6 +12,7 @@ export const getAllPenyakit = async () => {
 
 export const getPenyakitById = async (id) => {
   const penyakit = await Penyakit.findOne({
+    attributes: ["id", "penyakit"],
     where: {
       id,
     },

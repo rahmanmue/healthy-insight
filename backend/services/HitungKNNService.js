@@ -56,9 +56,10 @@ const getNilaiBobotGejala = async (data) => {
 
 const getIdSolusi = async (data) => {
   const diagnosis = parseInt(data.nilai_diagnosis * 100);
+  const { penyakit } = data;
   const solusi_by_penyakit = await Solusi.findAll({
     where: {
-      id_penyakit: data.penyakit.id,
+      id_penyakit: penyakit.id,
     },
   });
 
@@ -82,7 +83,7 @@ export const getHasilPerhitunganKNN = async (dataInput) => {
   const data = await getInputData(dataInput);
 
   // 1. mencari basis pengetahuan untuk penyakit
-  const knowledge = await getBasisPengetahuanPenyakit();
+  const basis_pengetahuan = await getBasisPengetahuanPenyakit();
 
   // 2. buat array results untuk menampung hasil setiap diagnosis
   const results = [];
@@ -90,15 +91,16 @@ export const getHasilPerhitunganKNN = async (dataInput) => {
 
   // 3. melakukan perulangan pada setiap penyakit di basis pengetahuan
   // tujuannya untuk mencari basis pengetahuan yang cocok dengan penyakit yang dimasukan user
-  for (let i = 0; i < knowledge.length; i++) {
+  for (let i = 0; i < basis_pengetahuan.length; i++) {
     // 4. mengambil setiap gejala sesuai dengan penyakit di tabel database basis pengetahuan
-    const get_gejala = await getBasisPengetahuanGejalaByPenyakit(knowledge[i]);
+    const get_gejala = await getBasisPengetahuanGejalaByPenyakit(
+      basis_pengetahuan[i]
+    );
 
     // dan menghitung total gejala sesuai dengan penyakit di tabel database basis pengetahuan
     const total_gejala = get_gejala.length;
 
     // membuat variabel untuk menampung :
-
     let nilai_diagnosis = 0;
     let total_similarity_gejala = 0;
     let total_bobot = 0;
@@ -129,14 +131,14 @@ export const getHasilPerhitunganKNN = async (dataInput) => {
     const penyakit = await Penyakit.findOne({
       attributes: ["id", "penyakit"],
       where: {
-        id: knowledge[i].id_penyakit,
+        id: basis_pengetahuan[i].id_penyakit,
       },
     });
 
     // 10. simpan data ke array results
     results.push({
       penyakit: penyakit,
-      kode_basis_pengetahuan: knowledge[i].kode_basis_pengetahuan,
+      kode_basis_pengetahuan: basis_pengetahuan[i].kode_basis_pengetahuan,
       total_similarity_gejala: total_similarity_gejala,
       total_bobot: total_bobot,
       match_count: match_count,

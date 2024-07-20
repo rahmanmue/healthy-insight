@@ -8,20 +8,20 @@ export const getAllBasisPengetahuan = async () => {
     group: ["kode_basis_pengetahuan"],
   });
 
-  let z = [];
+  let results = [];
   for (let i = 0; i < kode_basis_pengetahuan.length; i++) {
     let kode_bp = kode_basis_pengetahuan[i].kode_basis_pengetahuan;
     const { data } = await getBasisPengetahuanByKode(kode_bp);
-    z.push({
+    results.push({
       kode_basis_Pengetahuan: kode_bp,
-      penyakit: data.penyakit,
+      penyakit: data.penyakit.penyakit,
       gejala: data.gejala,
     });
   }
 
   return {
     status: 200,
-    data: z,
+    data: results,
   };
 };
 
@@ -46,28 +46,29 @@ export const getBasisPengetahuanByKode = async (kode) => {
 
   const gejala = kode_basis_Pengetahuan.map((item) => {
     const gejala_item = allGejala.find((x) => x.id === item.id_gejala);
-    return gejala_item;
+    return {
+      id: item.id,
+      id_gejala: item.id_gejala,
+      gejala: gejala_item.gejala,
+    };
   });
 
   return {
     status: 200,
     data: {
-      penyakit,
+      penyakit: penyakit,
       gejala,
     },
   };
 };
 
-export const getBasisPengetahuanById = async (id) => {
+export const checkBasisPengetahuan = async (kode_bp) => {
   const basisPengetahuan = await BasisPengetahuan.findOne({
     where: {
-      id: id,
+      kode_basis_pengetahuan: kode_bp,
     },
   });
-  return {
-    status: 200,
-    data: basisPengetahuan,
-  };
+  return basisPengetahuan;
 };
 
 export const createBasisPengetahuan = async (data) => {
@@ -75,6 +76,17 @@ export const createBasisPengetahuan = async (data) => {
   return {
     status: 201,
     message: "Data successfully created",
+  };
+};
+
+export const deleteBasisPengetahuan = async (kode) => {
+  await BasisPengetahuan.destroy({
+    where: {
+      kode_basis_pengetahuan: kode,
+    },
+  });
+  return {
+    status: 204,
   };
 };
 
@@ -90,14 +102,13 @@ export const updateBasisPengetahuan = async (data) => {
   };
 };
 
-export const deleteBasisPengetahuan = async (id) => {
+export const deleteBasisPengetahuanById = async (id) => {
   await BasisPengetahuan.destroy({
     where: {
-      id,
+      id: id,
     },
   });
   return {
     status: 204,
-    message: "Data successfully deleted",
   };
 };

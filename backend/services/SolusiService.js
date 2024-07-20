@@ -1,7 +1,15 @@
 import Solusi from "../models/SolusiModel.js";
 
 export const getAllSolusi = async () => {
-  const solusi = await Solusi.findAll();
+  const solusi = await Solusi.findAll({
+    attributes: [
+      "id",
+      "id_penyakit",
+      "persentase_awal",
+      "persentase_akhir",
+      "solusi",
+    ],
+  });
   return {
     status: 200,
     data: solusi,
@@ -10,6 +18,14 @@ export const getAllSolusi = async () => {
 
 export const getSolusiById = async (id) => {
   const solusi = await Solusi.findOne({
+    attributes: [
+      "id",
+      "id_penyakit",
+      "persentase_awal",
+      "persentase_akhir",
+      "solusi",
+    ],
+
     where: {
       id,
     },
@@ -43,7 +59,7 @@ export const updateSolusi = async (data) => {
 export const deleteSolusi = async (id) => {
   await Solusi.destroy({
     where: {
-      id,
+      id: id,
     },
   });
   return {

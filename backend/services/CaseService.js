@@ -53,12 +53,11 @@ export const getAllCase = async () => {
       };
     });
 
-    let temp = [];
+    let results = [];
     for (let j = 0; j < kode_basis_pengetahuan.length; j++) {
-      temp.push({
-        kode_basis_pengetahuan:
-          kode_basis_pengetahuan[j].kode_basis_pengetahuan,
-        // gejala: gejala,
+      let kode_bp = kode_basis_pengetahuan[j].kode_basis_pengetahuan;
+      results.push({
+        kode_basis_pengetahuan: kode_bp,
         nilai_diagnosis: kode_basis_pengetahuan[j].nilai_diagnosis,
         id_solusi: kode_basis_pengetahuan[j].id_solusi,
       });
@@ -67,7 +66,7 @@ export const getAllCase = async () => {
     cases.push({
       kode_case: kode_case[i].kode_case,
       gejala: gejala,
-      results: temp,
+      diagnosis: results,
     });
   }
 
@@ -93,6 +92,7 @@ export const createCase = async (data) => {
   const { final_result_case } = await getHasilPerhitunganKNN(data);
   const cases_data = await Case.bulkCreate(final_result_case);
   const kode_case = cases_data[0].kode_case;
+
   return {
     status: 201,
     data: kode_case,
@@ -100,26 +100,13 @@ export const createCase = async (data) => {
   };
 };
 
-export const updateCase = async (data) => {
-  await Case.update(data, {
-    where: {
-      id: data.id,
-    },
-  });
-  return {
-    status: 200,
-    message: "Data successfully updated",
-  };
-};
-
-export const deleteCase = async (id) => {
+export const deleteCase = async (kode) => {
   await Case.destroy({
     where: {
-      id,
+      kode_case: kode,
     },
   });
   return {
     status: 204,
-    message: "Data successfully deleted",
   };
 };
