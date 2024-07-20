@@ -8,5 +8,6 @@ export const getHasilHitungKNN = async (req, res) => {
     res.status(200).json(results);
   } catch (error) {
     res.status(500).json({ message: error.message });
+    console.log(error);
   }
 };

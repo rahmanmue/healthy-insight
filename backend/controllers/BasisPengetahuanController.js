@@ -29,10 +29,11 @@ export const getAllBasisPengetahuanByKode = async (req, res) => {
 export const createBasisPengetahuanController = async (req, res) => {
   try {
     const data = req.body;
+    const { check } = req.query;
 
-    const check = await checkBasisPengetahuan(data[0].kode_basis_pengetahuan);
+    const checkBp = await checkBasisPengetahuan(data[0].kode_basis_pengetahuan);
 
-    if (check) {
+    if (checkBp && check === "true") {
       res.status(400).json({ message: "Basis Pengetahuan sudah ada" });
       return;
     }

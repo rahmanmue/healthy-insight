@@ -25,7 +25,9 @@ export const getCaseByNoKasusController = async (req, res) => {
 
 export const createCaseController = async (req, res) => {
   try {
-    const cases = await createCase(req.body);
+    const data = req.body;
+    const dataGejala = data.gejala;
+    const cases = await createCase(dataGejala, data);
     res.status(cases.status).json(cases.data);
   } catch (error) {
     res.status(500).json({ message: error.message });
