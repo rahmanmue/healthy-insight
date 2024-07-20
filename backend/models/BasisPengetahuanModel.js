@@ -35,15 +35,4 @@ const BasisPengetahuan = db.define(
   }
 );
 
-BasisPengetahuan.belongsToMany(Penyakit, {
-  through: "basispengetahuan_penyakit",
-  onDelete: "CASCADE",
-  onUpdate: "CASCADE",
-});
-BasisPengetahuan.belongsToMany(Gejala, {
-  through: "basispengetahuan_gejala",
-  onDelete: "CASCADE",
-  onUpdate: "CASCADE",
-});
-
 export default BasisPengetahuan;

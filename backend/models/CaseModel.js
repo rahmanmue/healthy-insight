@@ -16,6 +16,15 @@ const Case = db.define(
     kode_basis_pengetahuan: {
       type: DataTypes.STRING,
     },
+    name: {
+      type: DataTypes.STRING,
+    },
+    umur: {
+      type: DataTypes.FLOAT,
+    },
+    jenis_kelamin: {
+      type: DataTypes.ENUM("L", "P"),
+    },
     id_gejala: {
       type: DataTypes.INTEGER,
       references: {
@@ -35,11 +44,5 @@ const Case = db.define(
     timestamps: true,
   }
 );
-
-Case.belongsToMany(Gejala, {
-  through: "case_gejala",
-  onDelete: "cascade",
-  onUpdate: "cascade",
-});
 
 export default Case;

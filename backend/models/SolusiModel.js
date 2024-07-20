@@ -12,6 +12,10 @@ const Solusi = db.define(
     },
     id_penyakit: {
       type: DataTypes.INTEGER,
+      references: {
+        model: Penyakit,
+        key: "id",
+      },
     },
     persentase_awal: {
       type: DataTypes.FLOAT,
@@ -28,11 +32,5 @@ const Solusi = db.define(
     timestamps: true,
   }
 );
-
-Penyakit.hasMany(Solusi, {
-  foreignKey: "id_penyakit",
-  onDelete: "CASCADE",
-  onUpdate: "CASCADE",
-});
 
 export default Solusi;
