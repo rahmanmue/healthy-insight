@@ -27,7 +27,7 @@ export const getPenyakitByIdController = async (req, res) => {
 export const createPenyakitController = async (req, res) => {
   try {
     const penyakit = await createPenyakit(req.body);
-    res.status(penyakit.status).json(penyakit.data);
+    res.status(penyakit.status).json({ message: penyakit.message });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -36,7 +36,7 @@ export const createPenyakitController = async (req, res) => {
 export const updatePenyakitController = async (req, res) => {
   try {
     const penyakit = await updatePenyakit(req.body);
-    res.status(penyakit.status).json(penyakit.data);
+    res.status(penyakit.status).json({ message: penyakit.message });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -45,7 +45,7 @@ export const updatePenyakitController = async (req, res) => {
 export const deletePenyakitController = async (req, res) => {
   try {
     const penyakit = await deletePenyakit(req.params.id);
-    res.status(penyakit.status);
+    res.sendStatus(penyakit.status);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

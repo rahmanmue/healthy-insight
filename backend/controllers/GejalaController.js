@@ -45,7 +45,7 @@ export const updateGejalaController = async (req, res) => {
 export const deleteGejalaController = async (req, res) => {
   try {
     const gejala = await deleteGejala(req.params.id);
-    res.status(gejala.status);
+    res.sendStatus(gejala.status);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

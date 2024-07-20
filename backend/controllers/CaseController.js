@@ -2,7 +2,6 @@ import {
   getAllCase,
   getCaseByKodeCase,
   createCase,
-  updateCase,
   deleteCase,
 } from "../services/CaseService.js";
 
@@ -30,22 +29,14 @@ export const createCaseController = async (req, res) => {
     res.status(cases.status).json(cases.data);
   } catch (error) {
     res.status(500).json({ message: error.message });
-  }
-};
-
-export const updateCaseController = async (req, res) => {
-  try {
-    const cases = await updateCase(req.body);
-    res.status(cases.status).json(cases.data);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.log(error);
   }
 };
 
 export const deleteCaseController = async (req, res) => {
   try {
-    const cases = await deleteCase(req.params.id);
-    res.status(cases.status);
+    const cases = await deleteCase(req.params.kode_case);
+    res.sendStatus(cases.status);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
