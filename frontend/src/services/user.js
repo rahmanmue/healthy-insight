@@ -1,6 +1,6 @@
 import axiosInstance from "./api";
 
-class User {
+class UserService {
   async getAll() {
     const response = await axiosInstance.get("/user");
     return response.data;
@@ -22,4 +22,4 @@ class User {
   }
 }
 
-export default User;
+export default UserService;

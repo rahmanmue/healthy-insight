@@ -1,6 +1,6 @@
 import axiosInstance from "./api";
 
-class Penyakit {
+class PenyakitService {
   async getAll() {
     const response = await axiosInstance.get("/penyakit");
     return response.data;
@@ -27,4 +27,4 @@ class Penyakit {
   }
 }
 
-export default Penyakit;
+export default PenyakitService;

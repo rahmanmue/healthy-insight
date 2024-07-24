@@ -1,6 +1,6 @@
 import axiosInstance from "./api";
 
-class BasisPengetahuan {
+class BasisPengetahuanService {
   async getAll() {
     const response = await axiosInstance.get("/basis-pengetahuan");
     return response.data;
@@ -40,4 +40,4 @@ class BasisPengetahuan {
   }
 }
 
-export default BasisPengetahuan;
+export default BasisPengetahuanService;

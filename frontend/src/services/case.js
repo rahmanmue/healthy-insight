@@ -1,6 +1,6 @@
 import axiosInstance from "./api";
 
-class Case {
+class CaseService {
   async getAll() {
     const response = await axiosInstance.get("/cases");
     return response.data;
@@ -22,4 +22,4 @@ class Case {
   }
 }
 
-export default Case;
+export default CaseService;

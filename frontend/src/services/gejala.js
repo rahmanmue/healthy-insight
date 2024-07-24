@@ -1,6 +1,6 @@
 import axiosInstance from "./api";
 
-class Gejala {
+class GejalaService {
   async getAll() {
     const response = await axiosInstance.get("/gejala");
     return response.data;
@@ -27,4 +27,4 @@ class Gejala {
   }
 }
 
-export default Gejala;
+export default GejalaService;
