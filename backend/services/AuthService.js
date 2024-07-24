@@ -12,10 +12,13 @@ export const register = async (data) => {
       message: "Data successfully created",
     };
   } catch (err) {
-    if (err.name === "SequelizeUniqueConstraintError") {
+    if (
+      err.name === "SequelizeUniqueConstraintError" &&
+      err.errors[0].path === "email"
+    ) {
       throw new Error("Email already registered");
     } else {
-      throw new Error(err.message);
+      throw new Error(err.message || "Something went wrong");
     }
   }
 };
