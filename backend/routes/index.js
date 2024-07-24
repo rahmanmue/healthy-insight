@@ -83,7 +83,7 @@ router.delete(
 );
 
 router.get("/cases", getAllCases);
-router.get("/cases/:id", getCaseByNoKasusController);
+router.get("/cases/:kode_case", getCaseByNoKasusController);
 router.post("/cases", createCaseController);
 router.delete("/cases/:kode_case", deleteCaseController);
 

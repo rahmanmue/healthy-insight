@@ -27,7 +27,7 @@ export const getGejalaFromCase = async (kode_case) => {
 
 export const getAllCase = async () => {
   const kode_case = await Case.findAll({
-    attributes: ["kode_case", "name", "umur", "jenis_kelamin"],
+    attributes: ["kode_case", "name"],
     group: ["kode_case"],
   });
 
@@ -36,28 +36,14 @@ export const getAllCase = async () => {
     group: ["kode_basis_pengetahuan"],
   });
 
-  const allGejala = await Gejala.findAll({
-    attributes: ["id", "gejala"],
-  });
-
   let cases = [];
 
   for (let i = 0; i < kode_case.length; i++) {
-    const id_all_gejala = await getGejalaFromCase(kode_case[i].kode_case);
-
-    const gejala = id_all_gejala.map((item) => {
-      const gejala = allGejala.find((gejala) => gejala.id === item.id_gejala);
-      return {
-        id_gejala: gejala.id,
-        gejala: gejala.gejala,
-      };
-    });
-
     let results = [];
     for (let j = 0; j < kode_basis_pengetahuan.length; j++) {
-      let kode_bp = kode_basis_pengetahuan[j].kode_basis_pengetahuan;
       results.push({
-        kode_basis_pengetahuan: kode_bp,
+        kode_basis_pengetahuan:
+          kode_basis_pengetahuan[j].kode_basis_pengetahuan,
         nilai_diagnosis: kode_basis_pengetahuan[j].nilai_diagnosis,
         id_solusi: kode_basis_pengetahuan[j].id_solusi,
       });
@@ -66,9 +52,6 @@ export const getAllCase = async () => {
     cases.push({
       kode_case: kode_case[i].kode_case,
       name: kode_case[i].name,
-      umur: kode_case[i].umur,
-      jenis_kelamin: kode_case[i].jenis_kelamin,
-      gejala: gejala,
       diagnosis: results,
     });
   }
@@ -80,14 +63,51 @@ export const getAllCase = async () => {
 };
 
 export const getCaseByKodeCase = async (kode_case) => {
-  const case_data = await Case.findAll({
+  const case_data = await Case.findOne({
+    attributes: ["kode_case", "name", "umur", "jenis_kelamin"],
     where: {
       kode_case: kode_case,
     },
   });
+
+  const kode_basis_pengetahuan = await Case.findAll({
+    attributes: ["kode_basis_pengetahuan", "nilai_diagnosis", "id_solusi"],
+    group: ["kode_basis_pengetahuan"],
+  });
+
+  const allGejala = await Gejala.findAll({
+    attributes: ["id", "gejala"],
+  });
+
+  const id_all_gejala = await getGejalaFromCase(kode_case);
+
+  const gejala = id_all_gejala.map((item) => {
+    const gejala = allGejala.find((gejala) => gejala.id === item.id_gejala);
+    return {
+      id_gejala: gejala.id,
+      gejala: gejala.gejala,
+    };
+  });
+
+  let results = [];
+  for (let j = 0; j < kode_basis_pengetahuan.length; j++) {
+    results.push({
+      kode_basis_pengetahuan: kode_basis_pengetahuan[j].kode_basis_pengetahuan,
+      nilai_diagnosis: kode_basis_pengetahuan[j].nilai_diagnosis,
+      id_solusi: kode_basis_pengetahuan[j].id_solusi,
+    });
+  }
+
   return {
     status: 200,
-    data: case_data,
+    data: {
+      kode_case: case_data.kode_case,
+      name: case_data.name,
+      umur: case_data.umur,
+      jenis_kelamin: case_data.jenis_kelamin,
+      gejala: gejala,
+      diagnosis: results,
+    },
   };
 };
 

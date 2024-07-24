@@ -16,7 +16,7 @@ export const getAllCases = async (req, res) => {
 
 export const getCaseByNoKasusController = async (req, res) => {
   try {
-    const cases = await getCaseByKodeCase(req.params);
+    const cases = await getCaseByKodeCase(req.params.kode_case);
     res.status(cases.status).json(cases.data);
   } catch (error) {
     res.status(500).json({ message: error.message });

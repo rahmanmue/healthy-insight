@@ -13,7 +13,7 @@ export const getAllBasisPengetahuan = async () => {
     let kode_bp = kode_basis_pengetahuan[i].kode_basis_pengetahuan;
     const { data } = await getBasisPengetahuanByKode(kode_bp);
     results.push({
-      kode_basis_Pengetahuan: kode_bp,
+      kode_basis_pengetahuan: kode_bp,
       penyakit: data.penyakit.penyakit,
       gejala: data.gejala,
     });
