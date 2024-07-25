@@ -93,6 +93,6 @@ router.post("/solusi", createSolusiController);
 router.put("/solusi", updateSolusiController);
 router.delete("/solusi/:id", deleteSolusiController);
 
-router.get("/hitung-knn/:kode_case", getHasilHitungKNN);
+router.get("/case/knn/:kode_case", getHasilHitungKNN);
 
 export default router;

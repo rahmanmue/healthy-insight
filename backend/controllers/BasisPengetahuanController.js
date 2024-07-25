@@ -34,7 +34,7 @@ export const createBasisPengetahuanController = async (req, res) => {
     const checkBp = await checkBasisPengetahuan(data[0].kode_basis_pengetahuan);
 
     if (checkBp && check === "true") {
-      res.status(400).json({ message: "Basis Pengetahuan sudah ada" });
+      res.status(400).json({ message: "Kode Basis Pengetahuan sudah Ada" });
       return;
     }
 
