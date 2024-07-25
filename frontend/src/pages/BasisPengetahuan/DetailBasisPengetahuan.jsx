@@ -1,13 +1,17 @@
 import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import BasisPengetahuanService from "../../services/basisPengetahuan";
 import GejalaService from "../../services/gejala";
-import ModalGejala from "./ModalGejala";
-import { IoMdAdd } from "react-icons/io";
+import ModalBasisPengetahuan from "./ModalBasisPengetahuan";
 import { swalAdd, swalUpdate, swalDelete } from "../../utils/Swal";
+import { IoMdAdd } from "react-icons/io";
 
 const gejalaService = new GejalaService();
+const basisPengetahuanService = new BasisPengetahuanService();
 
-const Gejala = () => {
-  // get all gejala
+const DetailBasisPengetahuan = () => {
+  const { kode_bp } = useParams();
+  const [data, setData] = useState({});
   const [gejala, setGejala] = useState([]);
 
   // show modal
@@ -23,7 +27,18 @@ const Gejala = () => {
     setOpen(!open);
   };
 
-  const getAll = async () => {
+  const getDetail = async () => {
+    try {
+      const data = await basisPengetahuanService.getDetailBasisPengetahuan(
+        kode_bp
+      );
+      setData(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getAllGejala = async () => {
     try {
       const data = await gejalaService.getAll();
       setGejala(data);
@@ -32,11 +47,17 @@ const Gejala = () => {
     }
   };
 
-  const addData = async (data) => {
+  const addData = async (id_gejala) => {
     try {
-      await gejalaService.createGejala([data]);
+      const newData = {
+        kode_basis_pengetahuan: kode_bp,
+        id_penyakit: data.penyakit.id,
+        id_gejala: id_gejala,
+      };
+
+      await basisPengetahuanService.createBasisPengetahuan([newData], false);
       swalAdd();
-      getAll();
+      getDetail();
     } catch (error) {
       console.log(error);
     }
@@ -44,9 +65,9 @@ const Gejala = () => {
 
   const updateData = async (data) => {
     try {
-      await gejalaService.updateGejala(data);
+      await basisPengetahuanService.updateGejalaBp(data);
       swalUpdate();
-      getAll();
+      getDetail();
     } catch (error) {
       console.log(error);
     }
@@ -54,34 +75,39 @@ const Gejala = () => {
 
   const deleteData = async (id) => {
     try {
-      await gejalaService.deleteGejala(id);
-      getAll();
+      await basisPengetahuanService.deleteGejalaBp(id);
+      getDetail();
     } catch (error) {
       console.log(error);
     }
   };
 
   useEffect(() => {
-    getAll();
+    getDetail();
+    getAllGejala();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
     <>
-      <div className="flex justify-between mb-5">
-        <h1 className="text-3xl font-bold">Gejala</h1>
+      <div className="flex justify-between mb-7">
+        <h1 className="text-3xl font-bold capitalize">
+          {`Detail Basis Pengetahuan ${kode_bp} (${data?.penyakit?.penyakit})`}
+        </h1>
+
         <button
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded flex items-center gap-1 focus:outline-none focus:shadow-outline"
-          type="button"
+          className="inline-flex w-full justify-center items-center rounded-md bg-blue-600 px-5 py-2 text-md font-bold text-white shadow-sm hover:bg-blue-500 sm:mr-2 sm:w-auto"
           onClick={() => handleOpen()}
         >
-          <IoMdAdd className="inline text-xl" /> Gejala
+          <IoMdAdd className="mr-2" /> Tambah Gejala
         </button>
       </div>
 
-      <ModalGejala
+      <ModalBasisPengetahuan
         open={open}
         handleOpen={handleOpen}
         item={itemData}
+        gejala={gejala}
         addData={addData}
         updateData={updateData}
       />
@@ -107,12 +133,6 @@ const Gejala = () => {
                     </th>
                     <th
                       scope="col"
-                      className="px-6 py-3 text-start text-xs font-bold text-dark  uppercase"
-                    >
-                      Bobot
-                    </th>
-                    <th
-                      scope="col"
                       className="px-6 py-3 text-center text-xs font-bold text-dark  uppercase"
                     >
                       AKSI
@@ -120,7 +140,7 @@ const Gejala = () => {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200 ">
-                  {gejala.map((item, index) => (
+                  {data?.gejala?.map((item, index) => (
                     <tr key={index}>
                       <td className="px-6 py-4 whitespace-wrap text-sm font-bold text-gray-800 ">
                         {index + 1}
@@ -128,20 +148,17 @@ const Gejala = () => {
                       <td className="px-6 py-4 whitespace-wrap text-sm text-gray-800 ">
                         {item.gejala}
                       </td>
-                      <td className="px-6 py-4 whitespace-wrap text-center text-sm text-gray-800 ">
-                        {item.nilai_bobot}
-                      </td>
-                      <td className="px-6 py-4 whitespace-wrap  text-sm font-bold flex justify-center gap-2">
+
+                      <td className="px-6 py-4 whitespace-wrap text-sm font-bold flex justify-center gap-2">
                         <button
                           onClick={() => handleOpen(item)}
-                          type="button"
                           className="inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-yellow-500 text-white px-2 py-2 hover:bg-yellow-600 focus:outline-none"
                         >
                           EDIT
                         </button>
                         <button
-                          onClick={() => handleShowDelete(item.id)}
                           type="button"
+                          onClick={() => handleShowDelete(item.id)}
                           className="inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-red-500 text-white px-2 py-2 hover:bg-red-600 focus:outline-none"
                         >
                           HAPUS
@@ -159,4 +176,4 @@ const Gejala = () => {
   );
 };
 
-export default Gejala;
+export default DetailBasisPengetahuan;

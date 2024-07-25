@@ -1,16 +1,28 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import CaseService from "../../services/case";
+import { Link } from "react-router-dom";
 
 const caseService = new CaseService();
 
 const Case = () => {
   const [data, setData] = useState([]);
+
+  const getAll = async () => {
+    try {
+      const data = await caseService.getAll();
+      setData(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleShowDelete = (id) => {
+    alert(id);
+  };
+
   useEffect(() => {
-    caseService
-      .getAll()
-      .then((data) => setData(data))
-      .catch((error) => console.log(error));
+    getAll();
   }, []);
 
   return (
@@ -67,39 +79,41 @@ const Case = () => {
                             <>
                               <td
                                 rowSpan={item.diagnosis.length}
-                                className="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-800"
+                                className="px-6 py-4 font-bold whitespace-nowrap text-sm text-center text-gray-800"
                               >
                                 {itemIndex + 1}
                               </td>
                               <td
                                 rowSpan={item.diagnosis.length}
-                                className="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-800"
+                                className="px-6 py-4 font-semibold whitespace-nowrap text-sm text-center text-gray-800"
                               >
                                 {item.name}
                               </td>
                             </>
                           )}
-                          <td className="px-6 py-4 whitespace-wrap text-sm text-gray-800 text-center">
+                          <td className="px-6 py-4 font-bold whitespace-wrap text-sm text-gray-800 text-center">
                             {diagnosa.kode_basis_pengetahuan}
                           </td>
-                          <td className="px-6 py-4 whitespace-wrap text-sm text-gray-800 text-center">
-                            {`${diagnosa.nilai_diagnosis.toFixed(2)} %`}
+                          <td className="px-6 py-4 font-medium whitespace-wrap text-sm text-gray-800 text-center">
+                            {`${diagnosa.nilai_diagnosis.toFixed(4)} %`}
                           </td>
                           {diagnosaIndex === 0 && (
                             <td
                               rowSpan={item.diagnosis.length}
-                              className="px-6 py-4 whitespace-wrap text-sm text-gray-800 text-end"
+                              className="px-6 py-4  whitespace-wrap text-sm text-gray-800 text-end"
                             >
-                              {/* <button
-                                name="Detail"
-                                type="button"
-                                restClass="bg-cyan-500 hover:bg-cyan-700 text-white font-bold py-2 px-4 rounded mr-2"
-                              />
+                              <Link
+                                to={`/case/hasil/${item.kode_case}`}
+                                className="inline-flex items-center gap-x-2 mr-2 text-sm font-semibold rounded-lg border border-transparent bg-cyan-500 text-white px-2 py-2 hover:bg-cyan-600 focus:outline-none"
+                              >
+                                Detail Perhitungan
+                              </Link>
                               <button
-                                name="Hapus "
-                                type="button"
-                                restClass="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-                              /> */}
+                                onClick={() => handleShowDelete(item.kode_case)}
+                                className="inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-red-500 text-white px-2 py-2 hover:bg-red-600 focus:outline-none"
+                              >
+                                Hapus
+                              </button>
                             </td>
                           )}
                         </tr>

@@ -1,6 +1,9 @@
 import { useContext, useState } from "react";
 import { AuthContenxt } from "../../contexts/AuthContext";
-import { Navigate, Link } from "react-router-dom";
+import {
+  Navigate,
+  // Link
+} from "react-router-dom";
 import Input from "../../components/Input/Input";
 import notify from "../../utils/notify";
 import { useNavigate } from "react-router-dom";
@@ -52,13 +55,13 @@ const Login = () => {
 
   return (
     <div className="h-full flex flex-col justify-center">
-      <h1 className="text-3xl font-bold my-2">Login</h1>
-      <p className="mb-2">
+      <h1 className="text-3xl font-bold my-2">Login Administrator</h1>
+      {/* <p className="mb-2">
         Belum Punya Akun ?{" "}
         <Link className="text-blue-500 font-semibold" to="/register">
           Daftar Disini
         </Link>
-      </p>
+      </p> */}
 
       <ToastContainer />
 

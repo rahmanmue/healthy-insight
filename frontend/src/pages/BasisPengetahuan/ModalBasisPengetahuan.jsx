@@ -1,18 +1,24 @@
 import { useEffect, useState } from "react";
 import Modal from "../../components/Modal/Modal";
-import Input from "../../components/Input/Input";
+import { Select } from "@headlessui/react";
 import notify from "../../utils/notify";
 import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 
-const ModalGejala = ({ open, handleOpen, item, addData, updateData }) => {
+const ModalBasisPengetahuan = ({
+  open,
+  handleOpen,
+  gejala,
+  item,
+  addData,
+  updateData,
+}) => {
   const [data, setData] = useState(item);
   const [title, setTitle] = useState("Tambah Gejala");
 
-  const handleChange = (e) => {
+  const handleInput = (event) => {
     setData({
       ...data,
-      [e.target.name]: e.target.value,
+      [event.target.name]: event.target.value,
     });
   };
 
@@ -20,26 +26,21 @@ const ModalGejala = ({ open, handleOpen, item, addData, updateData }) => {
     if (title === "Edit Gejala") {
       await updateData({
         id: item.id,
-        gejala: data.gejala ? data.gejala : item.gejala,
-        nilai_bobot: data.nilai_bobot ? data.nilai_bobot : item.nilai_bobot,
+        id_gejala: data.id_gejala ? data.id_gejala : item.id_gejala,
       });
     }
 
     if (title === "Tambah Gejala") {
-      if (data.gejala !== "" || data.nilai_bobot !== "") {
-        await addData({
-          gejala: data.gejala,
-          nilai_bobot: data.nilai_bobot,
-        });
-      } else {
+      if (data.id_gejala === "") {
         notify("error", "Columns cannot be empty", 1500);
         return;
+      } else {
+        await addData(data.id_gejala);
       }
     }
 
     setData({
-      gejala: "",
-      nilai_bobot: "",
+      id_gejala: "",
     });
 
     handleOpen();
@@ -62,22 +63,28 @@ const ModalGejala = ({ open, handleOpen, item, addData, updateData }) => {
       <div className="bg-white px-8 pb-4 pt-5 sm:p-6 sm:pb-4">
         <h1 className="text-3xl font-bold">{title}</h1>
         <div className="flex flex-col">
-          <Input
-            label="Gejala"
-            name="gejala"
-            type="text"
-            placeholder="Gejala"
-            defaultValue={item?.gejala || ""}
-            onChange={handleChange}
-          />
-          <Input
-            label="Bobot"
-            name="nilai_bobot"
-            type="number"
-            placeholder="Bobot"
-            defaultValue={item?.nilai_bobot || ""}
-            onChange={handleChange}
-          />
+          <div>
+            <Select
+              name="id_gejala"
+              className="py-3 ps-4 mt-2 pe-5 block w-full border-2 border-gray-200 bg-white rounded-lg text-md font-medium focus:border-blue-500 focus:border-1 focus:ring-blue-500 focus:outline-none"
+              value={data.id}
+              onChange={handleInput}
+              required
+            >
+              <option value="" selected disabled>
+                Pilih Gejala
+              </option>
+              {gejala?.map((itemGejala, i) => (
+                <option
+                  key={i}
+                  value={itemGejala.id}
+                  selected={item.id_gejala === itemGejala.id}
+                >
+                  {itemGejala.gejala}
+                </option>
+              ))}
+            </Select>
+          </div>
         </div>
       </div>
       <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
@@ -105,4 +112,4 @@ const ModalGejala = ({ open, handleOpen, item, addData, updateData }) => {
   );
 };
 
-export default ModalGejala;
+export default ModalBasisPengetahuan;

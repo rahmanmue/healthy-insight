@@ -5,9 +5,9 @@ import notify from "../../utils/notify";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const ModalGejala = ({ open, handleOpen, item, addData, updateData }) => {
+const ModalPenyakit = ({ open, handleOpen, item, addData, updateData }) => {
   const [data, setData] = useState(item);
-  const [title, setTitle] = useState("Tambah Gejala");
+  const [title, setTitle] = useState("Tambah Penyakit");
 
   const handleChange = (e) => {
     setData({
@@ -17,19 +17,17 @@ const ModalGejala = ({ open, handleOpen, item, addData, updateData }) => {
   };
 
   const handleSubmit = async () => {
-    if (title === "Edit Gejala") {
+    if (title === "Edit Penyakit") {
       await updateData({
         id: item.id,
-        gejala: data.gejala ? data.gejala : item.gejala,
-        nilai_bobot: data.nilai_bobot ? data.nilai_bobot : item.nilai_bobot,
+        penyakit: data.penyakit ? data.penyakit : item.penyakit,
       });
     }
 
-    if (title === "Tambah Gejala") {
-      if (data.gejala !== "" || data.nilai_bobot !== "") {
+    if (title === "Tambah Penyakit") {
+      if (data.penyakit !== "") {
         await addData({
-          gejala: data.gejala,
-          nilai_bobot: data.nilai_bobot,
+          penyakit: data.penyakit,
         });
       } else {
         notify("error", "Columns cannot be empty", 1500);
@@ -38,8 +36,7 @@ const ModalGejala = ({ open, handleOpen, item, addData, updateData }) => {
     }
 
     setData({
-      gejala: "",
-      nilai_bobot: "",
+      penyakit: "",
     });
 
     handleOpen();
@@ -47,10 +44,10 @@ const ModalGejala = ({ open, handleOpen, item, addData, updateData }) => {
 
   useEffect(() => {
     if (open && item.id) {
-      setTitle("Edit Gejala");
+      setTitle("Edit Penyakit");
     } else {
       const timeout = setTimeout(() => {
-        setTitle("Tambah Gejala");
+        setTitle("Tambah Penyakit");
       }, 300);
       return () => clearTimeout(timeout);
     }
@@ -60,22 +57,13 @@ const ModalGejala = ({ open, handleOpen, item, addData, updateData }) => {
     <Modal open={open} handleOpen={handleOpen}>
       <ToastContainer />
       <div className="bg-white px-8 pb-4 pt-5 sm:p-6 sm:pb-4">
-        <h1 className="text-3xl font-bold">{title}</h1>
+        <h1 className="text-3xl font-bold mb-2">{title}</h1>
         <div className="flex flex-col">
           <Input
-            label="Gejala"
-            name="gejala"
+            name="penyakit"
             type="text"
-            placeholder="Gejala"
-            defaultValue={item?.gejala || ""}
-            onChange={handleChange}
-          />
-          <Input
-            label="Bobot"
-            name="nilai_bobot"
-            type="number"
-            placeholder="Bobot"
-            defaultValue={item?.nilai_bobot || ""}
+            placeholder="Penyakit"
+            defaultValue={item?.penyakit || ""}
             onChange={handleChange}
           />
         </div>
@@ -85,17 +73,17 @@ const ModalGejala = ({ open, handleOpen, item, addData, updateData }) => {
           type="button"
           onClick={() => handleSubmit()}
           className={`inline-flex w-full justify-center rounded-md  px-3 py-2 text-sm font-semibold text-white shadow-sm  sm:ml-3 sm:w-auto ${
-            title === "Tambah Gejala"
+            title === "Tambah Penyakit"
               ? "bg-blue-600 hover:bg-blue-500"
-              : "bg-yellow-600 hover:bg-yellow-500"
+              : "bg-yellow-500 hover:bg-yellow-600"
           }`}
         >
-          {title === "Tambah Gejala" ? "Tambah" : "Edit"}
+          {title === "Tambah Penyakit" ? "Tambah" : "Edit"}
         </button>
         <button
           type="button"
           data-autofocus
-          onClick={() => handleOpen(false)}
+          onClick={() => handleOpen()}
           className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
         >
           Cancel
@@ -105,4 +93,4 @@ const ModalGejala = ({ open, handleOpen, item, addData, updateData }) => {
   );
 };
 
-export default ModalGejala;
+export default ModalPenyakit;
