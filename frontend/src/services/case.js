@@ -6,8 +6,13 @@ class CaseService {
     return response.data;
   }
 
+  async getCaseByKodeCase(code) {
+    const response = await axiosInstance.get(`/cases/${code}`);
+    return response.data;
+  }
+
   async getKnnByKodeCase(code) {
-    const response = await axiosInstance.get(`/cases/knn/${code}`);
+    const response = await axiosInstance.get(`/case/knn/${code}`);
     return response.data;
   }
 

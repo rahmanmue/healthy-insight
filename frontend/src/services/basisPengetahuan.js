@@ -6,7 +6,7 @@ class BasisPengetahuanService {
     return response.data;
   }
 
-  async getCaseByKodeBp(code) {
+  async getDetailBasisPengetahuan(code) {
     const response = await axiosInstance.get(`/basis-pengetahuan/${code}`);
     return response.data;
   }
