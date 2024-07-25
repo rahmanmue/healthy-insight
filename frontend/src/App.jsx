@@ -1,58 +1,51 @@
-import "./App.css";
-import { useState } from "react";
-import {
-  FaHome,
-  FaUser,
-  FaCog,
-  FaSignOutAlt,
-  FaBars,
-  FaTimes,
-} from "react-icons/fa";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Home from "./pages/Home/Home";
+import Login from "./pages/Login/Login";
+import Register from "./pages/Register/Register";
+import Penyakit from "./pages/Penyakit/Penyakit";
+import Case from "./pages/Case/Case";
+import Gejala from "./pages/Gejala/Gejala";
+import User from "./pages/User/User";
+import BasisPengetahuan from "./pages/BasisPengetahuan/BasisPengetahuan";
+import AddBasisPengetahuan from "./pages/BasisPengetahuan/AddBasisPengetahuan";
+import DetailBasisPengetahuan from "./pages/BasisPengetahuan/DetailBasisPengetahuan";
+import DetailCase from "./pages/Case/DetailCase";
+// import PrivateRoute from "./routes/PrivateRoute";
+import MainLayout from "./components/MainLayout/MainLayout";
 
 function App() {
-  const [isOpen, setIsOpen] = useState(false);
-  const toggleSidebar = () => {
-    setIsOpen(!isOpen);
-  };
   return (
-    <>
-      <div className="flex h-screen font-sans">
-        <div
-          className={`bg-gray-800 text-white h-full ${
-            isOpen ? "w-1/4" : "w-0"
-          } transition-all duration-300 overflow-hidden`}
-        >
-          <ul className="flex flex-col p-4">
-            <div className="h-16 flex items-center p-4">
-              <h1 className="text-xl">Stunt Diagnosis</h1>
-            </div>
-            <li className="px-4 py-2 hover:bg-gray-700 cursor-pointer flex items-center">
-              <FaHome className="mr-2" /> Dashboard
-            </li>
-            <li className="px-4 py-2 hover:bg-gray-700 cursor-pointer flex items-center">
-              <FaUser className="mr-2" /> Profile
-            </li>
-            <li className="px-4 py-2 hover:bg-gray-700 cursor-pointer flex items-center">
-              <FaCog className="mr-2" /> Settings
-            </li>
-            <li className="px-4 py-2 hover:bg-gray-700 cursor-pointer flex items-center">
-              <FaSignOutAlt className="mr-2" /> Logout
-            </li>
-          </ul>
-        </div>
-        <div className="flex-1 flex flex-col">
-          <div className="bg-gray-800 text-white h-16 flex items-center p-4">
-            <button className="text-white mr-4" onClick={toggleSidebar}>
-              {isOpen ? <FaTimes /> : <FaBars />}
-            </button>
-            <h1 className="text-xl">My App</h1>
-          </div>
-          <div className="flex-1 p-10">
-            <h1 className="text-4xl font-bold">Main Content</h1>
-          </div>
-        </div>
-      </div>
-    </>
+    <BrowserRouter>
+      <MainLayout>
+        <Routes>
+          {/* <Route path="/" element={<PrivateRoute roles={["admin", "user"]} />}>
+            <Route path="login" element={<Login />} />
+            <Route path="register" element={<Register />} />
+          </Route> */}
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/kasus" element={<Case />} />
+          <Route path="/admin/penyakit" element={<Penyakit />} />
+          <Route path="/admin/gejala" element={<Gejala />} />
+          <Route path="/admin/user" element={<User />} />
+          <Route
+            path="/admin/basis-pengetahuan"
+            element={<BasisPengetahuan />}
+          />
+          <Route
+            path="/admin/basis-pengetahuan/add"
+            element={<AddBasisPengetahuan />}
+          />
+          <Route
+            path="/admin/basis-pengetahuan/detail/:kode_bp"
+            element={<DetailBasisPengetahuan />}
+          />
+
+          <Route path="/case/hasil/:kode_case" element={<DetailCase />} />
+        </Routes>
+      </MainLayout>
+    </BrowserRouter>
   );
 }
 
