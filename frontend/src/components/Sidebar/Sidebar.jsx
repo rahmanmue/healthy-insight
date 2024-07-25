@@ -1,19 +1,20 @@
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { SidebarContext } from "../../contexts/SidebarContext";
-import { FaHome, FaUserFriends } from "react-icons/fa";
+import { FaHome, FaRegUser } from "react-icons/fa";
 import {
   MdLogin,
-  MdAppRegistration,
+  // MdAppRegistration,
   MdOutlineLogout,
   MdOutlineHealthAndSafety,
   MdOutlineCases,
 } from "react-icons/md";
 import { RiHealthBookLine } from "react-icons/ri";
-import { SiKnowledgebase } from "react-icons/si";
+import { GiHealing } from "react-icons/gi";
 import { TbHealthRecognition } from "react-icons/tb";
 import { Link } from "react-router-dom";
 import { AuthContenxt } from "../../contexts/AuthContext";
-import ModalLogout from "../Modal/ModalLogout";
+import { AiOutlineSolution } from "react-icons/ai";
+import Swal from "sweetalert2";
 
 const menuUser = [
   {
@@ -28,30 +29,35 @@ const menuUser = [
   },
   {
     icon: <MdLogin />,
-    menu: "Login",
+    menu: "Login as Admin",
     toLink: "/login",
   },
-  {
-    icon: <MdAppRegistration />,
-    menu: "Register",
-    toLink: "/register",
-  },
+  // {
+  //   icon: <MdAppRegistration />,
+  //   menu: "Register",
+  //   toLink: "/register",
+  // },
 ];
 const menuAdmin = [
   {
-    icon: <MdOutlineHealthAndSafety />,
+    icon: <RiHealthBookLine />,
     menu: "Penyakit",
     toLink: "/admin/penyakit",
   },
   {
-    icon: <RiHealthBookLine />,
+    icon: <GiHealing />,
     menu: "Gejala",
     toLink: "/admin/gejala",
   },
   {
-    icon: <SiKnowledgebase />,
+    icon: <MdOutlineHealthAndSafety />,
     menu: "Basis Pengetahuan",
     toLink: "/admin/basis-pengetahuan",
+  },
+  {
+    icon: <AiOutlineSolution />,
+    menu: "Solusi",
+    toLink: "/admin/solusi",
   },
   {
     icon: <MdOutlineCases />,
@@ -59,23 +65,29 @@ const menuAdmin = [
     toLink: "/kasus",
   },
   {
-    icon: <FaUserFriends />,
-    menu: "Data User",
+    icon: <FaRegUser />,
+    menu: "Akun",
     toLink: "/admin/user",
   },
-  // {
-  //   icon: <MdOutlineLogout />,
-  //   menu: "Logout",
-  //   toLink: "/login",
-  // },
 ];
 
 const Sidebar = () => {
   const { isOpen } = useContext(SidebarContext);
-  const { role } = useContext(AuthContenxt);
-  const [showLogout, setShowLogout] = useState(false);
+  const { role, logout } = useContext(AuthContenxt);
   const handleShowLogout = () => {
-    setShowLogout(!showLogout);
+    Swal.fire({
+      title: "Logout?",
+      text: "Are you sure you want to logout?",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        logout();
+      }
+    });
   };
 
   return (
@@ -122,7 +134,6 @@ const Sidebar = () => {
           " "
         )}
       </ul>
-      <ModalLogout open={showLogout} handleOpen={handleShowLogout} />
     </div>
   );
 };
