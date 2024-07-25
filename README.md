@@ -15,4 +15,4 @@ Stunting Diagnosis Expert System adalah aplikasi berbasis web yang digunakan unt
 
 - Backend: Node.js, Express
 - Frontend: React.js
-- Database: PostgreSQL
+- Database: MySQL
