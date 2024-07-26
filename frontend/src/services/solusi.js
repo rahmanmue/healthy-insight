@@ -1,6 +1,6 @@
 import axiosInstance from "./api";
 
-class Solusi {
+class SolusiService {
   async getAll() {
     const response = await axiosInstance.get("/solusi");
     return response.data;
@@ -27,4 +27,4 @@ class Solusi {
   }
 }
 
-export default Solusi;
+export default SolusiService;
