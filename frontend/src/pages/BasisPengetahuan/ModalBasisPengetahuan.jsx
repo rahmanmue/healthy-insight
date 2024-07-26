@@ -32,7 +32,7 @@ const ModalBasisPengetahuan = ({
 
     if (title === "Tambah Gejala") {
       if (data.id_gejala === "") {
-        notify("error", "Columns cannot be empty", 1500);
+        notify("error", "Data tidak boleh kosong", 1500);
         return;
       } else {
         await addData(data.id_gejala);

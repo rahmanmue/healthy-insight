@@ -1,25 +1,24 @@
 import { useState, useEffect } from "react";
-import PenyakitService from "../../services/penyakit";
-import ModalPenyakit from "./ModalPenyakit";
 import { IoMdAdd } from "react-icons/io";
-import { swalAdd, swalUpdate, swalDelete } from "../../utils/Swal";
+import { swalDelete } from "../../utils/Swal";
+import { Link } from "react-router-dom";
+import SolusiService from "../../services/solusi";
+import PenyakitService from "../../services/penyakit";
 
+const solusiService = new SolusiService();
 const penyakitService = new PenyakitService();
 
-const Penyakit = () => {
+const Solusi = () => {
+  const [solusi, setSolusi] = useState([]);
   const [penyakit, setPenyakit] = useState([]);
 
-  // show modal
-  const [open, setOpen] = useState(false);
-  const [itemData, setItemData] = useState({});
-
-  const handleShowDelete = async (id) => {
-    swalDelete(id, deleteData);
-  };
-
-  const handleOpen = (itemData) => {
-    setItemData(itemData || {});
-    setOpen(!open);
+  const getAllSolusi = async () => {
+    try {
+      const data = await solusiService.getAll();
+      setSolusi(data);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const getAllPenyakit = async () => {
@@ -31,59 +30,40 @@ const Penyakit = () => {
     }
   };
 
-  const addData = async (data) => {
-    try {
-      await penyakitService.createPenyakit(data);
-      swalAdd();
-      getAllPenyakit();
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const updateData = async (data) => {
-    try {
-      await penyakitService.updatePenyakit(data);
-      swalUpdate();
-      getAllPenyakit();
-    } catch (error) {
-      console.log(error);
-    }
+  const getPenyakit = (id) => {
+    const penyakitFiltered = penyakit?.filter((item) => item.id === id);
+    return penyakitFiltered[0]?.penyakit;
   };
 
   const deleteData = async (id) => {
     try {
-      await penyakitService.deletePenyakit(id);
-      getAllPenyakit();
+      await solusiService.deleteSolusi(id);
+      getAllSolusi();
     } catch (error) {
       console.log(error);
     }
   };
 
+  const handleShowDelete = (id) => {
+    swalDelete(id, deleteData);
+  };
+
   useEffect(() => {
+    getAllSolusi();
     getAllPenyakit();
   }, []);
 
   return (
     <>
       <div className="flex justify-between mb-5">
-        <h1 className="text-3xl font-bold">Penyakit</h1>
-        <button
+        <h1 className="text-3xl font-bold">Solusi</h1>
+        <Link
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 flex items-center gap-1 rounded focus:outline-none focus:shadow-outline"
-          type="button"
-          onClick={() => handleOpen()}
+          to={`/admin/solusi/add`}
         >
-          <IoMdAdd className="inline text-xl" /> Penyakit
-        </button>
+          <IoMdAdd className="inline text-xl" /> Solusi
+        </Link>
       </div>
-
-      <ModalPenyakit
-        open={open}
-        handleOpen={handleOpen}
-        item={itemData}
-        addData={addData}
-        updateData={updateData}
-      />
 
       <div className="flex flex-col">
         <div className="-m-1.5 overflow-x-auto">
@@ -106,6 +86,12 @@ const Penyakit = () => {
                     </th>
                     <th
                       scope="col"
+                      className="px-6 py-3 text-start text-xs font-bold text-dark  uppercase"
+                    >
+                      Solusi
+                    </th>
+                    <th
+                      scope="col"
                       className="px-6 py-3 text-end text-xs font-bold text-dark  uppercase"
                     >
                       AKSI
@@ -113,25 +99,31 @@ const Penyakit = () => {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200 ">
-                  {penyakit?.map((item, index) => (
+                  {solusi?.map((item, index) => (
                     <tr key={index}>
                       <td className="px-6 py-4 whitespace-wrap text-sm font-bold text-gray-800 ">
                         {index + 1}
                       </td>
+                      <td className="px-6 py-4 whitespace-wrap capitalize text-gray-800 ">
+                        <div className="text-md font-semibold">
+                          {getPenyakit(item.id_penyakit)}
+                        </div>
+                        <span className="text-xs">
+                          {`(${item.persentase_awal}-${item.persentase_akhir})%`}
+                        </span>
+                      </td>
                       <td className="px-6 py-4 whitespace-wrap text-md capitalize text-gray-800 ">
-                        {item.penyakit}
+                        {item.solusi}
                       </td>
                       <td className="px-6 py-4 whitespace-wrap  text-sm font-bold flex justify-end gap-2">
-                        <button
-                          onClick={() => handleOpen(item)}
-                          type="button"
+                        <Link
+                          to={`/admin/solusi/edit/${item.id}`}
                           className="inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-yellow-500 text-white px-2 py-2 hover:bg-yellow-600 focus:outline-none"
                         >
                           EDIT
-                        </button>
+                        </Link>
                         <button
                           onClick={() => handleShowDelete(item.id)}
-                          type="button"
                           className="nline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-red-500 text-white px-2 py-2 hover:bg-red-600 focus:outline-none"
                         >
                           HAPUS
@@ -149,4 +141,4 @@ const Penyakit = () => {
   );
 };
 
-export default Penyakit;
+export default Solusi;

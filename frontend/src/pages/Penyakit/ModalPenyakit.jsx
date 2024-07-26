@@ -30,7 +30,7 @@ const ModalPenyakit = ({ open, handleOpen, item, addData, updateData }) => {
           penyakit: data.penyakit,
         });
       } else {
-        notify("error", "Columns cannot be empty", 1500);
+        notify("error", "Data tidak boleh kosong", 1500);
         return;
       }
     }

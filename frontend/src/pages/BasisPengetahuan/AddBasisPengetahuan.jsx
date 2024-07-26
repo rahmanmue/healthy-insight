@@ -73,28 +73,18 @@ const AddBasisPengetahuan = () => {
     event.preventDefault();
     try {
       if (data.kode_basis_pengetahuan === "" || data.id_penyakit === "") {
-        notify("error", "Columns cannot be empty", 1500);
+        notify("error", "Data basis pengetahuan tidak boleh kosong", 1500);
         return;
       }
 
       const postData = selectedGejala.map((id) => ({
         kode_basis_pengetahuan: data.kode_basis_pengetahuan,
-        id_penyakit: data.id_penyakit,
-        id_gejala: id,
+        id_penyakit: parseInt(data.id_penyakit),
+        id_gejala: parseInt(id),
       }));
 
       await basisPengetahuanService.createBasisPengetahuan(postData);
-
-      //   notify("success", "Success", 1500, true);
-
-      //   const timeoutId = setTimeout(() => {
-      //     navigate("/admin/basis-pengetahuan");
-      //   }, 1500);
-
-      //   return () => clearTimeout(timeoutId);
-
       swalAdd();
-
       navigate("/admin/basis-pengetahuan");
     } catch (error) {
       console.log(error);
@@ -147,10 +137,10 @@ const AddBasisPengetahuan = () => {
             <label className="block text-md font-semibold leading-6 text-gray-900 my-2  ">
               Pilih Gejala
             </label>
-            <hr className="my-2" />
+            <hr className="mt-2 mb-3" />
             {gejala?.map((item, i) => (
-              <div key={i} className="flex items-center gap-3">
-                <input
+              <div className="flex items-center gap-3" key={i}>
+                <Input
                   type="checkbox"
                   name="gejala"
                   value={item.id}

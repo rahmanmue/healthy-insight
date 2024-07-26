@@ -1,21 +1,34 @@
-import { useContext, useState } from "react";
+import { useState, useContext, useEffect } from "react";
 import { AuthContenxt } from "../../contexts/AuthContext";
 import Input from "../../components/Input/Input";
 import { ToastContainer } from "react-toastify";
 import notify from "../../utils/notify";
 import "react-toastify/dist/ReactToastify.css";
-// import { Navigate, Link, useNavigate } from "react-router-dom";
+import UserService from "../../services/user";
+import { swalUpdate } from "../../utils/Swal";
 
-const Register = () => {
-  // const navigate = useNavigate();
-  const { register } = useContext(AuthContenxt);
+const userService = new UserService();
 
+const Akun = () => {
+  const { userId } = useContext(AuthContenxt);
   const [data, setData] = useState({
+    id: "",
     username: "",
     email: "",
     password: "",
     confirmPassword: "",
   });
+
+  const getUserById = async (id) => {
+    const response = await userService.getUserById(id);
+    console.log(response);
+    setData({
+      ...data,
+      id: response.id,
+      username: response.username,
+      email: response.email,
+    });
+  };
 
   const handleOnChange = (e) => {
     setData({
@@ -24,63 +37,59 @@ const Register = () => {
     });
   };
 
-  const reset = () => {
-    setData({
-      username: "",
-      email: "",
-      password: "",
-      confirmPassword: "",
-    });
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (
-      data.username === "" ||
-      data.email === "" ||
-      data.password === "" ||
-      data.confirmPassword === ""
-    ) {
-      notify("error", "Data tidak boleh kosong");
-      return;
-    }
-
-    if (data.password !== data.confirmPassword) {
-      notify("error", "Password dan Konfirmasi Password harus Sama");
-      return;
-    }
-
     try {
+      if (data.password !== data.confirmPassword) {
+        notify("error", "Password dan Konfirmasi Password harus Sama");
+        return;
+      }
+
       const payload = {
+        id: data.id,
         username: data.username,
         email: data.email,
-        password: data.password,
       };
-      const res = await register(payload);
-      notify("success", res.message, 2000, true);
-      reset();
-      // setTimeout(() => {
-      //   navigate("/login");
-      // }, 2000);
+
+      if (data.password !== "" && data.confirmPassword !== "") {
+        payload.password = data.password;
+      }
+
+      await userService.updateUser(payload);
+      swalUpdate();
+
+      // reset form
+      setData({
+        ...data,
+        password: "",
+        confirmPassword: "",
+      });
+
+      console.log(data);
     } catch (err) {
       console.log(err);
       notify("error", err.response.data.message);
     }
   };
 
+  useEffect(() => {
+    getUserById(userId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <div className="h-full flex flex-col justify-center">
-      <h1 className="text-3xl font-bold my-2">Register</h1>
+      <h1 className="text-3xl font-bold my-2">Update Akun</h1>
       <ToastContainer />
-      <form onSubmit={(e) => handleSubmit(e)}>
+      <form onSubmit={handleSubmit}>
         <Input
           label="Username"
           name="username"
           type="text"
           placeholder="Username"
           value={data.username}
-          onChange={(e) => handleOnChange(e)}
+          onChange={handleOnChange}
         />
         <Input
           label="Email"
@@ -88,7 +97,7 @@ const Register = () => {
           type="email"
           placeholder="Email"
           value={data.email}
-          onChange={(e) => handleOnChange(e)}
+          onChange={handleOnChange}
         />
         <Input
           label="Password"
@@ -96,7 +105,7 @@ const Register = () => {
           type="password"
           placeholder="Password"
           value={data.password}
-          onChange={(e) => handleOnChange(e)}
+          onChange={handleOnChange}
         />
         <Input
           label="Konfirmasi Password"
@@ -104,17 +113,17 @@ const Register = () => {
           type="password"
           placeholder="Konfirmasi Password"
           value={data.confirmPassword}
-          onChange={(e) => handleOnChange(e)}
+          onChange={handleOnChange}
         />
         <button
           className="font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-2 bg-blue-500 hover:bg-blue-700 text-white w-full"
           type="submit"
         >
-          REGISTER
+          SIMPAN
         </button>
       </form>
     </div>
   );
 };
 
-export default Register;
+export default Akun;

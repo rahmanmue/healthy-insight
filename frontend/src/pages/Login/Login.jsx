@@ -19,7 +19,7 @@ const Login = () => {
   });
 
   if (role === "admin") {
-    return <Navigate to="/admin/dashboard" />;
+    return <Navigate to="/admin/kasus" />;
   }
 
   const handleOnChange = (e) => {
@@ -33,7 +33,7 @@ const Login = () => {
     e.preventDefault();
 
     if (data.email === "" || data.password === "") {
-      notify("error", "Columns cannot be empty");
+      notify("error", "Data tidak boleh kosong");
       return;
     }
 
@@ -42,11 +42,8 @@ const Login = () => {
         email: data.email,
         password: data.password,
       };
-      const role = await login(payload);
-      if (role === "admin") {
-        return navigate("/case");
-      }
-      return navigate("/penyakit");
+      await login(payload);
+      return navigate("/admin/kasus");
     } catch (error) {
       console.log(error.response);
       notify("error", error.response.data.message, 2000, true);
@@ -56,12 +53,6 @@ const Login = () => {
   return (
     <div className="h-full flex flex-col justify-center">
       <h1 className="text-3xl font-bold my-2">Login Administrator</h1>
-      {/* <p className="mb-2">
-        Belum Punya Akun ?{" "}
-        <Link className="text-blue-500 font-semibold" to="/register">
-          Daftar Disini
-        </Link>
-      </p> */}
 
       <ToastContainer />
 

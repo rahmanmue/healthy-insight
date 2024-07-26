@@ -32,7 +32,7 @@ const ModalGejala = ({ open, handleOpen, item, addData, updateData }) => {
           nilai_bobot: data.nilai_bobot,
         });
       } else {
-        notify("error", "Columns cannot be empty", 1500);
+        notify("error", "Data tidak boleh kosong", 1500);
         return;
       }
     }

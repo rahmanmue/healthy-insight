@@ -2,10 +2,11 @@ import React from "react";
 import { useState, useEffect } from "react";
 import CaseService from "../../services/case";
 import { Link } from "react-router-dom";
+import { swalDelete } from "../../utils/Swal";
 
 const caseService = new CaseService();
 
-const Case = () => {
+const Kasus = () => {
   const [data, setData] = useState([]);
 
   const getAll = async () => {
@@ -18,7 +19,16 @@ const Case = () => {
   };
 
   const handleShowDelete = (id) => {
-    alert(id);
+    swalDelete(id, deleteData);
+  };
+
+  const deleteData = async (kode_case) => {
+    try {
+      await caseService.deleteCaseByKodeCase(kode_case);
+      getAll();
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   useEffect(() => {
@@ -95,7 +105,7 @@ const Case = () => {
                             {diagnosa.kode_basis_pengetahuan}
                           </td>
                           <td className="px-6 py-4 font-medium whitespace-wrap text-sm text-gray-800 text-center">
-                            {`${diagnosa.nilai_diagnosis.toFixed(4)} %`}
+                            {`${parseInt(diagnosa.nilai_diagnosis * 100)} %`}
                           </td>
                           {diagnosaIndex === 0 && (
                             <td
@@ -103,7 +113,7 @@ const Case = () => {
                               className="px-6 py-4  whitespace-wrap text-sm text-gray-800 text-end"
                             >
                               <Link
-                                to={`/case/hasil/${item.kode_case}`}
+                                to={`/kasus/hasil/${item.kode_case}`}
                                 className="inline-flex items-center gap-x-2 mr-2 text-sm font-semibold rounded-lg border border-transparent bg-cyan-500 text-white px-2 py-2 hover:bg-cyan-600 focus:outline-none"
                               >
                                 Detail Perhitungan
@@ -130,4 +140,4 @@ const Case = () => {
   );
 };
 
-export default Case;
+export default Kasus;

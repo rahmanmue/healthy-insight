@@ -4,7 +4,7 @@ import CaseService from "../../services/case";
 
 const caseService = new CaseService();
 
-const DetailCase = () => {
+const DetailKasus = () => {
   const { kode_case } = useParams();
   const [data, setData] = useState([]);
   const [cases, setCase] = useState([]);
@@ -27,13 +27,11 @@ const DetailCase = () => {
     }
   };
 
-  console.log(data);
-  console.log(cases);
-
   useEffect(() => {
     getPerhitunganKnn(kode_case);
     getCase(kode_case);
-  }, []);
+    window.scrollTo(0, 0);
+  }, [kode_case]);
 
   return (
     <>
@@ -65,7 +63,9 @@ const DetailCase = () => {
             index == 0 ? (
               <>
                 <tr key={index}>
-                  <td className="w-40 text-md font-semibold">Gejala</td>
+                  <td className="w-40 text-md font-semibold">
+                    Gejala Yang Dipilih
+                  </td>
                   <td className="font-medium text-md pr-1">:</td>
                   <td className="font-medium text-md">{x.gejala}</td>
                 </tr>
@@ -83,8 +83,8 @@ const DetailCase = () => {
         </table>
       </div>
 
-      <div className="my-3 font-medium text-md">
-        Hasil Perhitungan dengan Semua Basis Pengetahuan{" "}
+      <div className="mb-3 mt-5 font-semibold text-md">
+        Hasil Perhitungan Berdasarkan Basis Pengetahuan{" "}
       </div>
       <div className="flex flex-col mt-4">
         <div className="-m-1.5 overflow-x-auto">
@@ -101,7 +101,7 @@ const DetailCase = () => {
                     </th>
                     <th
                       scope="col"
-                      className="px-6 py-3 text-start text-xs font-bold text-dark  uppercase"
+                      className="px-6 py-3 text-center text-xs font-bold text-dark  uppercase"
                     >
                       Kode BP
                     </th>
@@ -137,7 +137,7 @@ const DetailCase = () => {
                       <td className="px-6 py-4 capitalize font-bold whitespace-wrap text-sm text-gray-800 ">
                         {item.penyakit.penyakit}
                       </td>
-                      <td className="px-6 py-4 whitespace-wrap text-sm font-medium text-gray-800 ">
+                      <td className="px-6 py-4 text-center whitespace-wrap text-sm font-medium text-gray-800 ">
                         {item.kode_basis_pengetahuan}
                       </td>
                       <td className="px-6 py-4 whitespace-wrap text-center text-sm text-gray-800 ">
@@ -162,12 +162,16 @@ const DetailCase = () => {
       </div>
 
       <div className="mt-5">
+        <h3 className="text-xl font-bold my-3">Solusi </h3>
         <p>
-          {`Berdasarkan perhitungan tersebut hasil diagnosis tertinggi adalah
-          penyakit ${cases[0]?.penyakit?.penyakit} dengan nilai diagnosis
-          ${parseInt(cases[0]?.nilai_diagnosis * 100)}%.`}
+          Berdasarkan perhitungan tersebut hasil diagnosis tertinggi adalah
+          penyakit
+          <span className="font-bold capitalize">{` ${cases[0]?.penyakit?.penyakit} `}</span>
+          dengan nilai diagnosis
+          <span className="font-bold">
+            {` ${parseInt(cases[0]?.nilai_diagnosis * 100)}%`}.
+          </span>
         </p>
-        <p>Dengan solusi sebagai berikut :</p>
         <div className="my-4 ps-4 pe-5 bg-slate-200 py-3 rounded-sm font-medium text-justify">
           {cases[0]?.solusi?.solusi}
         </div>
@@ -176,4 +180,4 @@ const DetailCase = () => {
   );
 };
 
-export default DetailCase;
+export default DetailKasus;

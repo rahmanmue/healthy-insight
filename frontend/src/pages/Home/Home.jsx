@@ -92,7 +92,7 @@ const Home = () => {
         </div>
       </div>
 
-      <div className="flex items-end gap-5">
+      <div className="flex items-center gap-5">
         <div>
           <h2 className="text-3xl font-bold my-3">
             Pencegahan dan Penanganan Stunting
