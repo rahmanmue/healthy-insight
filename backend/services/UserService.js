@@ -25,6 +25,16 @@ export const getUserById = async (id) => {
 };
 
 export const updateUser = async (data) => {
+  const userCheck = await User.findOne({
+    where: {
+      email: data.email,
+    },
+  });
+
+  if (userCheck && userCheck.id !== data.id) {
+    throw new Error("Email already registered");
+  }
+
   if (data.password) {
     const salt = await bcrypt.genSalt();
     data.password = await bcrypt.hash(data.password, salt);
