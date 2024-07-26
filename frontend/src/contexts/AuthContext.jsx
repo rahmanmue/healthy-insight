@@ -11,6 +11,7 @@ const auth = new AuthService();
 const AuthContextProvider = ({ children }) => {
   const [role, setRole] = useState(localStorage.getItem("role"));
   const [token, setToken] = useState(localStorage.getItem("token") || null);
+  const [userId, setUserId] = useState(localStorage.getItem("userId") || null);
   const login = async ({ email, password }) => {
     try {
       const { accessToken } = await auth.login(email, password);
@@ -25,7 +26,11 @@ const AuthContextProvider = ({ children }) => {
       // decode token
       const decoded = jwtDecode(accessToken);
       localStorage.setItem("role", decoded.role);
+      console.log(decoded);
       setRole(decoded.role);
+
+      localStorage.setItem("userId", decoded.userId);
+      setUserId(decoded.userId);
 
       return decoded.role;
     } catch (error) {
@@ -34,10 +39,13 @@ const AuthContextProvider = ({ children }) => {
   };
 
   const logout = () => {
+    axiosInstance.defaults.headers.common["Authorization"] = null;
     setToken(null);
     setRole(null);
-    axiosInstance.defaults.headers.common["Authorization"] = null;
+    setUserId(null);
     localStorage.removeItem("token");
+    localStorage.removeItem("role");
+    localStorage.removeItem("userId");
   };
 
   const register = async (data) => {
@@ -50,7 +58,7 @@ const AuthContextProvider = ({ children }) => {
   };
 
   return (
-    <AuthContenxt.Provider value={{ login, logout, register, role }}>
+    <AuthContenxt.Provider value={{ login, logout, register, role, userId }}>
       {children}
     </AuthContenxt.Provider>
   );
