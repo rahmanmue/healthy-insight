@@ -28,7 +28,11 @@ export const updateUserController = async (req, res) => {
     const user = await updateUser(req.body);
     res.status(user.status).json({ message: user.message });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    if (error.message === "Email already registered") {
+      res.status(404).json({ message: "Email sudah terdaftar" });
+    } else {
+      res.status(500).json({ message: error.message });
+    }
   }
 };
 
