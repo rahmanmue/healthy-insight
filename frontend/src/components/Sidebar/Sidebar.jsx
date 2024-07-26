@@ -11,10 +11,11 @@ import {
 import { RiHealthBookLine } from "react-icons/ri";
 import { GiHealing } from "react-icons/gi";
 import { TbHealthRecognition } from "react-icons/tb";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { AuthContenxt } from "../../contexts/AuthContext";
 import { AiOutlineSolution } from "react-icons/ai";
 import Swal from "sweetalert2";
+import { SiConsul } from "react-icons/si";
 
 const menuUser = [
   {
@@ -23,9 +24,9 @@ const menuUser = [
     toLink: "/home",
   },
   {
-    icon: <MdOutlineHealthAndSafety />,
-    menu: "Cek Stunting",
-    toLink: "/stunting-diagnosis",
+    icon: <SiConsul />,
+    menu: "Konsultasi",
+    toLink: "/konsultasi",
   },
   {
     icon: <MdLogin />,
@@ -39,6 +40,11 @@ const menuUser = [
   // },
 ];
 const menuAdmin = [
+  {
+    icon: <MdOutlineCases />,
+    menu: "Data Kasus",
+    toLink: "/admin/kasus",
+  },
   {
     icon: <RiHealthBookLine />,
     menu: "Penyakit",
@@ -58,11 +64,6 @@ const menuAdmin = [
     icon: <AiOutlineSolution />,
     menu: "Solusi",
     toLink: "/admin/solusi",
-  },
-  {
-    icon: <MdOutlineCases />,
-    menu: "Data Kasus",
-    toLink: "/kasus",
   },
   {
     icon: <FaRegUser />,
@@ -98,34 +99,42 @@ const Sidebar = () => {
     >
       <div className="flex items-center justify-center py-4 px-2">
         <TbHealthRecognition className="text-white text-7xl mx-4" />
-        <h1 className="text-white text-3xl font-semibold">
+        <h1 className="text-white text-3xl font-semibold md:text-md sm:text-lg">
           Stunting Diagnosis
         </h1>
       </div>
       <ul className="flex flex-col p-4">
         {role === "admin"
           ? menuAdmin.map((item, index) => (
-              <Link
-                className="font-semibold px-4 py-2 hover:bg-gray-700 cursor-pointer flex items-center gap-2 text-lg hover:scale-110 "
+              <NavLink
+                className={({ isActive }) =>
+                  `font-semibold px-4 py-2 md:text-md sm:text-lg hover:bg-gray-700 cursor-pointer flex items-center gap-2 text-lg hover:scale-110 duration-300 ${
+                    isActive && "bg-gray-700"
+                  }`
+                }
                 key={index}
                 to={item.toLink}
               >
                 {item.icon} {item.menu}
-              </Link>
+              </NavLink>
             ))
           : menuUser.map((item, index) => (
-              <Link
-                className="font-semibold px-4 py-2 hover:bg-gray-700 cursor-pointer flex items-center gap-2 text-lg hover:scale-110 duration-300"
+              <NavLink
+                className={({ isActive }) =>
+                  `font-semibold px-4 py-2 md:text-md sm:text-lg hover:bg-gray-700 cursor-pointer flex items-center gap-2 text-lg hover:scale-110 duration-300 ${
+                    isActive && "bg-gray-700"
+                  }`
+                }
                 key={index}
                 to={item.toLink}
               >
                 {item.icon} {item.menu}
-              </Link>
+              </NavLink>
             ))}
 
         {role === "admin" || role === "user" ? (
           <div
-            className="font-semibold px-4 py-2 hover:bg-gray-700 cursor-pointer flex items-center gap-2 text-lg hover:scale-110 duration-300"
+            className="font-semibold px-4 py-2 md:text-md sm:text-lg hover:bg-gray-700 cursor-pointer flex items-center gap-2 text-lg hover:scale-110 duration-300"
             onClick={handleShowLogout}
           >
             <MdOutlineLogout /> Logout
