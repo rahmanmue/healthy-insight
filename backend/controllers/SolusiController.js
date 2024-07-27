@@ -1,6 +1,7 @@
 import {
   getAllSolusi,
   getSolusiById,
+  getSolusiByData,
   createSolusi,
   updateSolusi,
   deleteSolusi,
@@ -18,6 +19,15 @@ export const getAllSolusiController = async (req, res) => {
 export const getSolusiByIdController = async (req, res) => {
   try {
     const solusi = await getSolusiById(req.params.id);
+    res.status(solusi.status).json(solusi.data);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const searchSolusi = async (req, res) => {
+  try {
+    const solusi = await getSolusiByData(req.query.data);
     res.status(solusi.status).json(solusi.data);
   } catch (error) {
     res.status(500).json({ message: error.message });

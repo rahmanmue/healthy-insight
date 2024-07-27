@@ -23,6 +23,19 @@ export const getPenyakitById = async (id) => {
   };
 };
 
+export const getPenyakitByData = async (data) => {
+  const penyakit = await Penyakit.findAll({
+    attributes: ["id", "penyakit"],
+    where: {
+      penyakit: data,
+    },
+  });
+  return {
+    status: 200,
+    data: penyakit,
+  };
+};
+
 export const createPenyakit = async (data) => {
   await Penyakit.create(data);
   return {

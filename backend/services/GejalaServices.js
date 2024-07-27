@@ -1,4 +1,5 @@
 import Gejala from "../models/GejalaModel.js";
+import { Op } from "sequelize";
 
 export const getAllGejala = async () => {
   const gejala = await Gejala.findAll({
@@ -15,6 +16,26 @@ export const getGejalaById = async (id) => {
     attributes: ["id", "gejala", "nilai_bobot"],
     where: {
       id,
+    },
+  });
+  return {
+    status: 200,
+    data: gejala,
+  };
+};
+
+export const getGejalaByData = async (data) => {
+  const gejala = await Gejala.findAll({
+    attributes: ["id", "gejala", "nilai_bobot"],
+    where: {
+      [Op.or]: {
+        gejala: {
+          [Op.like]: `%${data}%`,
+        },
+        nilai_bobot: {
+          [Op.like]: `%${data}%`,
+        },
+      },
     },
   });
   return {

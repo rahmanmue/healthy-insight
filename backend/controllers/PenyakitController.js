@@ -1,6 +1,7 @@
 import {
   getAllPenyakit,
   getPenyakitById,
+  getPenyakitByData,
   createPenyakit,
   updatePenyakit,
   deletePenyakit,
@@ -9,6 +10,15 @@ import {
 export const getPenyakit = async (req, res) => {
   try {
     const penyakit = await getAllPenyakit();
+    res.status(penyakit.status).json(penyakit.data);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const searchPenyakit = async (req, res) => {
+  try {
+    const penyakit = await getPenyakitByData(req.query.data);
     res.status(penyakit.status).json(penyakit.data);
   } catch (error) {
     res.status(500).json({ message: error.message });

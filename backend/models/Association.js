@@ -4,26 +4,42 @@ import Gejala from "./GejalaModel.js";
 import Penyakit from "./PenyakitModel.js";
 import Solusi from "./SolusiModel.js";
 
-BasisPengetahuan.belongsToMany(Penyakit, {
-  through: "basispengetahuan_penyakit",
+Penyakit.hasMany(BasisPengetahuan, {
+  foreignKey: "id_penyakit",
   onDelete: "CASCADE",
   onUpdate: "CASCADE",
 });
 
-BasisPengetahuan.belongsToMany(Gejala, {
-  through: "basispengetahuan_gejala",
+BasisPengetahuan.belongsTo(Penyakit, {
+  foreignKey: "id_penyakit",
+});
+
+Gejala.hasMany(BasisPengetahuan, {
+  foreignKey: "id_gejala",
   onDelete: "CASCADE",
   onUpdate: "CASCADE",
 });
 
-Case.belongsToMany(Gejala, {
-  through: "case_gejala",
-  onDelete: "cascade",
-  onUpdate: "cascade",
+BasisPengetahuan.belongsTo(Gejala, {
+  foreignKey: "id_gejala",
+});
+
+Gejala.hasMany(Case, {
+  foreignKey: "id_gejala",
+  onDelete: "CASCADE",
+  onUpdate: "CASCADE",
+});
+
+Case.belongsTo(Gejala, {
+  foreignKey: "id_gejala",
 });
 
 Penyakit.hasMany(Solusi, {
   foreignKey: "id_penyakit",
-  onDelete: "CASCADE",
-  onUpdate: "CASCADE",
+  onDelete: "cascade",
+  onUpdate: "cascade",
+});
+
+Solusi.belongsTo(Penyakit, {
+  foreignKey: "id_penyakit",
 });

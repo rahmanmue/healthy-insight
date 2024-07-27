@@ -2,8 +2,10 @@ import {
   getAllBasisPengetahuan,
   getBasisPengetahuanByKode,
   checkBasisPengetahuan,
+  getBasisPengetahuanByData,
   createBasisPengetahuan,
-  updateBasisPengetahuan,
+  updateBasisPengetahuanPenyakit,
+  updateBasisPengetahuanGejala,
   deleteBasisPengetahuan,
   deleteBasisPengetahuanById,
 } from "../services/BasisPengetahuanService.js";
@@ -20,6 +22,15 @@ export const getAllBasisPengetahuanController = async (req, res) => {
 export const getAllBasisPengetahuanByKode = async (req, res) => {
   try {
     const basisPengetahuan = await getBasisPengetahuanByKode(req.params.kode);
+    res.status(basisPengetahuan.status).json(basisPengetahuan.data);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const searchBasisPengetahun = async (req, res) => {
+  try {
+    const basisPengetahuan = await getBasisPengetahuanByData(req.query.data);
     res.status(basisPengetahuan.status).json(basisPengetahuan.data);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -47,10 +58,22 @@ export const createBasisPengetahuanController = async (req, res) => {
   }
 };
 
-export const updateBasisPengetahuanController = async (req, res) => {
+export const updateBasisPengetahuanPenyakitController = async (req, res) => {
   try {
     const data = req.body;
-    const basisPengetahuan = await updateBasisPengetahuan(data);
+    const basisPengetahuan = await updateBasisPengetahuanPenyakit(data);
+    res
+      .status(basisPengetahuan.status)
+      .json({ message: basisPengetahuan.message });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const updateBasisPengetahuanGejalaController = async (req, res) => {
+  try {
+    const data = req.body;
+    const basisPengetahuan = await updateBasisPengetahuanGejala(data);
     res
       .status(basisPengetahuan.status)
       .json({ message: basisPengetahuan.message });

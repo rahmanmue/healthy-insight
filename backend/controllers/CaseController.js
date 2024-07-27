@@ -1,6 +1,7 @@
 import {
   getAllCase,
   getCaseByKodeCase,
+  getCaseByData,
   createCase,
   deleteCase,
 } from "../services/CaseService.js";
@@ -14,9 +15,18 @@ export const getAllCases = async (req, res) => {
   }
 };
 
-export const getCaseByNoKasusController = async (req, res) => {
+export const getCaseByKodeCaseController = async (req, res) => {
   try {
     const cases = await getCaseByKodeCase(req.params.kode_case);
+    res.status(cases.status).json(cases.data);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const searchCase = async (req, res) => {
+  try {
+    const cases = await getCaseByData(req.query.name);
     res.status(cases.status).json(cases.data);
   } catch (error) {
     res.status(500).json({ message: error.message });

@@ -1,64 +1,139 @@
+import { Op } from "sequelize";
 import BasisPengetahuan from "../models/BasisPengetahuanModel.js";
 import Gejala from "../models/GejalaModel.js";
 import Penyakit from "../models/PenyakitModel.js";
 
 export const getAllBasisPengetahuan = async () => {
-  const kode_basis_pengetahuan = await BasisPengetahuan.findAll({
+  const basisPengetahuan = await BasisPengetahuan.findAll({
     attributes: ["id", "kode_basis_pengetahuan", "id_penyakit", "id_gejala"],
-    group: ["kode_basis_pengetahuan"],
+    include: [
+      {
+        model: Penyakit,
+        attributes: ["penyakit"],
+      },
+      {
+        model: Gejala,
+        attributes: ["id", "gejala"],
+      },
+    ],
   });
 
-  let results = [];
-  for (let i = 0; i < kode_basis_pengetahuan.length; i++) {
-    let kode_bp = kode_basis_pengetahuan[i].kode_basis_pengetahuan;
-    const { data } = await getBasisPengetahuanByKode(kode_bp);
-    results.push({
-      kode_basis_pengetahuan: kode_bp,
-      penyakit: data.penyakit.penyakit,
-      gejala: data.gejala,
-    });
-  }
+  // Mengelompokkan data berdasarkan kode_basis_pengetahuan
+  const groupedData = basisPengetahuan.reduce((acc, item) => {
+    // Jika kode_basis_pengetahuan belum ada di accumulator, tambahkan
+    if (!acc[item.kode_basis_pengetahuan]) {
+      acc[item.kode_basis_pengetahuan] = {
+        kode_basis_pengetahuan: item.kode_basis_pengetahuan,
+        penyakit: item.penyakit.penyakit,
+        gejala: [],
+      };
+    }
 
+    // Tambahkan gejala ke dalam array gejala untuk kode_basis_pengetahuan yang sesuai
+    acc[item.kode_basis_pengetahuan].gejala.push({
+      id: item.gejala.id,
+      id_gejala: item.id_gejala,
+      gejala: item.gejala.gejala,
+    });
+
+    return acc;
+  }, {});
+
+  // Mengubah objek groupedData menjadi array
+  const formattedData = Object.values(groupedData);
+
+  // Return response
   return {
     status: 200,
-    data: results,
+    data: formattedData,
   };
 };
 
 export const getBasisPengetahuanByKode = async (kode) => {
-  const allGejala = await Gejala.findAll({
-    attributes: ["id", "gejala"],
-  });
-
-  const kode_basis_Pengetahuan = await BasisPengetahuan.findAll({
+  const basisPengetahuan = await BasisPengetahuan.findAll({
     attributes: ["id", "kode_basis_pengetahuan", "id_penyakit", "id_gejala"],
-    where: {
-      kode_basis_pengetahuan: kode,
-    },
+    where: { kode_basis_pengetahuan: kode },
+    include: [
+      {
+        model: Penyakit,
+        attributes: ["penyakit"],
+      },
+      {
+        model: Gejala,
+        attributes: ["id", "gejala"],
+      },
+    ],
   });
 
-  const penyakit = await Penyakit.findOne({
-    attributes: ["id", "penyakit"],
-    where: {
-      id: kode_basis_Pengetahuan[0].id_penyakit,
-    },
-  });
+  // Ambil penyakit dari data BasisPengetahuan
+  const penyakit = basisPengetahuan[0].penyakit;
 
-  const gejala = kode_basis_Pengetahuan.map((item) => {
-    const gejala_item = allGejala.find((x) => x.id === item.id_gejala);
-    return {
-      id: item.id,
-      id_gejala: item.id_gejala,
-      gejala: gejala_item.gejala,
-    };
-  });
+  // Format gejala berdasarkan data BasisPengetahuan
+  const gejala = basisPengetahuan.map((item) => ({
+    id: item.id,
+    id_gejala: item.id_gejala,
+    gejala: item.gejala.gejala,
+  }));
+
+  const data = {
+    penyakit: penyakit.penyakit,
+    gejala: gejala,
+  };
 
   return {
     status: 200,
-    data: {
-      penyakit: penyakit,
-      gejala,
+    data: data,
+  };
+};
+
+export const getBasisPengetahuanByData = async (data) => {
+  const basisPengetahuan = await BasisPengetahuan.findAll({
+    attributes: ["id", "kode_basis_pengetahuan", "id_penyakit", "id_gejala"],
+    include: [
+      {
+        model: Penyakit,
+        attributes: ["penyakit"],
+      },
+      {
+        model: Gejala,
+        attributes: ["id", "gejala"],
+      },
+    ],
+    where: {
+      [Op.or]: [
+        { kode_basis_pengetahuan: { [Op.like]: `%${data}%` } },
+        { "$penyakit.penyakit$": { [Op.like]: `%${data}%` } },
+        { "$gejala.gejala$": { [Op.like]: `%${data}%` } },
+      ],
     },
+  });
+
+  // Mengelompokkan data berdasarkan kode_basis_pengetahuan
+  const groupedData = basisPengetahuan.reduce((acc, item) => {
+    // Jika kode_basis_pengetahuan belum ada di accumulator, tambahkan
+    if (!acc[item.kode_basis_pengetahuan]) {
+      acc[item.kode_basis_pengetahuan] = {
+        kode_basis_pengetahuan: item.kode_basis_pengetahuan,
+        penyakit: item.penyakit.penyakit,
+        gejala: [],
+      };
+    }
+
+    // Tambahkan gejala ke dalam array gejala untuk kode_basis_pengetahuan yang sesuai
+    acc[item.kode_basis_pengetahuan].gejala.push({
+      id: item.gejala.id,
+      id_gejala: item.id_gejala,
+      gejala: item.gejala.gejala,
+    });
+
+    return acc;
+  }, {});
+
+  // Mengubah objek groupedData menjadi array
+  const formattedData = Object.values(groupedData);
+  return {
+    status: 200,
+    data: formattedData,
   };
 };
 
@@ -90,7 +165,19 @@ export const deleteBasisPengetahuan = async (kode) => {
   };
 };
 
-export const updateBasisPengetahuan = async (data) => {
+export const updateBasisPengetahuanPenyakit = async (data) => {
+  await BasisPengetahuan.update(data, {
+    where: {
+      kode_basis_pengetahuan: data.kode_basis_pengetahuan,
+    },
+  });
+  return {
+    status: 200,
+    message: "Data successfully updated",
+  };
+};
+
+export const updateBasisPengetahuanGejala = async (data) => {
   await BasisPengetahuan.update(data, {
     where: {
       id: data.id,

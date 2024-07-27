@@ -5,88 +5,68 @@ import Penyakit from "../models/PenyakitModel.js";
 import crypto from "crypto";
 
 const getInputData = async (data) => {
-  try {
-    for (let i = 0; i < data.length; i++) {
-      const nilai_bobot = await getNilaiBobotGejala(data[i]);
-      data[i].nilai_bobot = nilai_bobot;
-    }
-
-    return data;
-  } catch (error) {
-    console.log(error);
+  for (let i = 0; i < data.length; i++) {
+    const nilai_bobot = await getNilaiBobotGejala(data[i]);
+    data[i].nilai_bobot = nilai_bobot;
   }
+
+  return data;
 };
 
 const getBasisPengetahuanPenyakit = async () => {
-  try {
-    const penyakit = await BasisPengetahuan.findAll({
-      attributes: ["kode_basis_pengetahuan", "id_penyakit"],
-      group: ["kode_basis_pengetahuan"],
-    });
-    return penyakit;
-  } catch (error) {
-    console.log(error);
-  }
+  const penyakit = await BasisPengetahuan.findAll({
+    attributes: ["kode_basis_pengetahuan", "id_penyakit"],
+    group: ["kode_basis_pengetahuan"],
+  });
+  return penyakit;
 };
 
 const getBasisPengetahuanGejalaByPenyakit = async (data) => {
-  try {
-    const gejalaPenyakit = await BasisPengetahuan.findAll({
-      attributes: ["id_gejala"],
-      where: {
-        id_penyakit: data.id_penyakit,
-      },
-    });
+  const gejalaPenyakit = await BasisPengetahuan.findAll({
+    attributes: ["id_gejala"],
+    where: {
+      id_penyakit: data.id_penyakit,
+    },
+  });
 
-    return gejalaPenyakit;
-  } catch (error) {
-    console.log(error);
-  }
+  return gejalaPenyakit;
 };
 
 const getNilaiBobotGejala = async (data) => {
-  try {
-    const gejala = await Gejala.findOne({
-      where: {
-        id: data.id_gejala,
-      },
-      attributes: ["nilai_bobot"],
-    });
+  const gejala = await Gejala.findOne({
+    where: {
+      id: data.id_gejala,
+    },
+    attributes: ["nilai_bobot"],
+  });
 
-    const nilai_bobot = gejala.nilai_bobot;
+  const nilai_bobot = gejala.nilai_bobot;
 
-    return nilai_bobot;
-  } catch (error) {
-    console.log(error);
-  }
+  return nilai_bobot;
 };
 
 const getIdSolusi = async (data) => {
-  try {
-    const diagnosis = parseInt(data.nilai_diagnosis * 100);
-    const { penyakit } = data;
-    const solusi_by_penyakit = await Solusi.findAll({
-      where: {
-        id_penyakit: penyakit.id,
-      },
-    });
+  const diagnosis = parseInt(data.nilai_diagnosis * 100);
+  const { penyakit } = data;
+  const solusi_by_penyakit = await Solusi.findAll({
+    where: {
+      id_penyakit: penyakit.id,
+    },
+  });
 
-    let id_solusi;
-    let solusi;
-    for (let i = 0; i < solusi_by_penyakit.length; i++) {
-      if (
-        diagnosis >= solusi_by_penyakit[i].persentase_awal &&
-        diagnosis <= solusi_by_penyakit[i].persentase_akhir
-      ) {
-        id_solusi = solusi_by_penyakit[i].id;
-        solusi = solusi_by_penyakit[i].solusi;
-      }
+  let id_solusi;
+  let solusi;
+  for (let i = 0; i < solusi_by_penyakit.length; i++) {
+    if (
+      diagnosis >= solusi_by_penyakit[i].persentase_awal &&
+      diagnosis <= solusi_by_penyakit[i].persentase_akhir
+    ) {
+      id_solusi = solusi_by_penyakit[i].id;
+      solusi = solusi_by_penyakit[i].solusi;
     }
-
-    return { id_solusi, solusi };
-  } catch (error) {
-    console.log(error);
   }
+
+  return { id_solusi, solusi };
 };
 
 export const getHasilPerhitunganKNN = async (dataGejala, dataInput = {}) => {
@@ -152,7 +132,7 @@ export const getHasilPerhitunganKNN = async (dataGejala, dataInput = {}) => {
       // 10. simpan data ke array results
       results.push({
         penyakit: penyakit,
-        kode_basis_pengetahuan: basis_pengetahuan[i]?.kode_basis_pengetahuan,
+        kode_basis_pengetahuan: basis_pengetahuan[i].kode_basis_pengetahuan,
         total_similarity_gejala: total_similarity_gejala,
         total_bobot: total_bobot,
         match_count: match_count,
@@ -190,7 +170,8 @@ export const getHasilPerhitunganKNN = async (dataGejala, dataInput = {}) => {
     }
 
     return { results, final_result_case };
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.log(error);
+    throw error;
   }
 };

@@ -2,6 +2,7 @@ import express from "express";
 import {
   getPenyakit,
   getPenyakitByIdController,
+  searchPenyakit,
   createPenyakitController,
   updatePenyakitController,
   deletePenyakitController,
@@ -10,6 +11,7 @@ import {
 import {
   getGejala,
   getGejalaByIdController,
+  searchGejala,
   createGejalaController,
   updateGejalaController,
   deleteGejalaController,
@@ -19,16 +21,19 @@ import {
   getAllBasisPengetahuanController,
   getAllBasisPengetahuanByKode,
   createBasisPengetahuanController,
-  updateBasisPengetahuanController,
+  updateBasisPengetahuanPenyakitController,
+  updateBasisPengetahuanGejalaController,
   deleteBasisPengetahuanController,
   deleteGejalaFromBasisPengetahuanController,
+  searchBasisPengetahun,
 } from "../controllers/BasisPengetahuanController.js";
 
 import {
   getAllCases,
-  getCaseByNoKasusController,
+  getCaseByKodeCaseController,
   createCaseController,
   deleteCaseController,
+  searchCase,
 } from "../controllers/CaseController.js";
 
 import { getHasilHitungKNN } from "../controllers/HitungKNNController.js";
@@ -39,6 +44,7 @@ import {
   createSolusiController,
   updateSolusiController,
   deleteSolusiController,
+  searchSolusi,
 } from "../controllers/SolusiController.js";
 
 import {
@@ -61,21 +67,31 @@ router.patch("/user", updateUserController);
 router.delete("/user/:id", deleteUserController);
 
 router.get("/penyakit", getPenyakit);
+router.get("/penyakit/search", searchPenyakit);
 router.get("/penyakit/:id", getPenyakitByIdController);
 router.post("/penyakit", createPenyakitController);
 router.put("/penyakit", updatePenyakitController);
 router.delete("/penyakit/:id", deletePenyakitController);
 
 router.get("/gejala", getGejala);
+router.get("/gejala/search", searchGejala);
 router.get("/gejala/:id", getGejalaByIdController);
 router.post("/gejala", createGejalaController);
 router.put("/gejala", updateGejalaController);
 router.delete("/gejala/:id", deleteGejalaController);
 
 router.get("/basis-pengetahuan", getAllBasisPengetahuanController);
+router.get("/basis-pengetahuan/search", searchBasisPengetahun);
 router.get("/basis-pengetahuan/:kode", getAllBasisPengetahuanByKode);
 router.post("/basis-pengetahuan", createBasisPengetahuanController);
-router.patch("/basis-pengetahuan/gejala", updateBasisPengetahuanController);
+router.patch(
+  "/basis-pengetahuan/gejala",
+  updateBasisPengetahuanGejalaController
+);
+router.patch(
+  "/basis-pengetahuan/penyakit",
+  updateBasisPengetahuanPenyakitController
+);
 router.delete("/basis-pengetahuan/:kode_bp", deleteBasisPengetahuanController);
 router.delete(
   "/basis-pengetahuan/gejala/:id",
@@ -83,11 +99,13 @@ router.delete(
 );
 
 router.get("/cases", getAllCases);
-router.get("/cases/:kode_case", getCaseByNoKasusController);
+router.get("/cases/search", searchCase);
+router.get("/cases/:kode_case", getCaseByKodeCaseController);
 router.post("/cases", createCaseController);
 router.delete("/cases/:kode_case", deleteCaseController);
 
 router.get("/solusi", getAllSolusiController);
+router.get("/solusi/search", searchSolusi);
 router.get("/solusi/:id", getSolusiByIdController);
 router.post("/solusi", createSolusiController);
 router.put("/solusi", updateSolusiController);
