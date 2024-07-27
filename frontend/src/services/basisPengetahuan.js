@@ -11,9 +11,24 @@ class BasisPengetahuanService {
     return response.data;
   }
 
+  async searchBasisPengetahuan(data) {
+    const response = await axiosInstance.get(
+      `/basis-pengetahuan/search?data=${data}`
+    );
+    return response.data;
+  }
+
   async createBasisPengetahuan(data, check = true) {
     const response = await axiosInstance.post(
       `/basis-pengetahuan?check=${check}`,
+      data
+    );
+    return response.data;
+  }
+
+  async updatePenyakitBp(data) {
+    const response = await axiosInstance.patch(
+      "/basis-pengetahuan/penyakit",
       data
     );
     return response.data;

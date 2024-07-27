@@ -65,8 +65,6 @@ const Akun = () => {
         password: "",
         confirmPassword: "",
       });
-
-      console.log(data);
     } catch (err) {
       console.log(err);
       notify("error", err.response.data.message);

@@ -11,6 +11,11 @@ class SolusiService {
     return response.data;
   }
 
+  async searchSolusi(data) {
+    const response = await axiosInstance.get(`/solusi/search?data=${data}`);
+    return response.data;
+  }
+
   async createSolusi(data) {
     const response = await axiosInstance.post("/solusi", data);
     return response.data;

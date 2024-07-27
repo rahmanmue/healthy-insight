@@ -11,6 +11,11 @@ class CaseService {
     return response.data;
   }
 
+  async searchCase(name) {
+    const response = await axiosInstance.get(`/cases/search?name=${name}`);
+    return response.data;
+  }
+
   async getKnnByKodeCase(code) {
     const response = await axiosInstance.get(`/case/knn/${code}`);
     return response.data;

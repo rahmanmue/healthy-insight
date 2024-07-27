@@ -3,12 +3,14 @@ import { createContext, useState } from "react";
 import AuthService from "../services/auth";
 import axiosInstance from "../services/api";
 import { jwtDecode } from "jwt-decode";
+import { useNavigate } from "react-router-dom";
 
 const AuthContenxt = createContext();
 
 const auth = new AuthService();
 
 const AuthContextProvider = ({ children }) => {
+  const navigate = useNavigate();
   const [role, setRole] = useState(localStorage.getItem("role"));
   const [token, setToken] = useState(localStorage.getItem("token") || null);
   const [userId, setUserId] = useState(localStorage.getItem("userId") || null);
@@ -26,7 +28,6 @@ const AuthContextProvider = ({ children }) => {
       // decode token
       const decoded = jwtDecode(accessToken);
       localStorage.setItem("role", decoded.role);
-      console.log(decoded);
       setRole(decoded.role);
 
       localStorage.setItem("userId", decoded.userId);
@@ -46,6 +47,7 @@ const AuthContextProvider = ({ children }) => {
     localStorage.removeItem("token");
     localStorage.removeItem("role");
     localStorage.removeItem("userId");
+    navigate("/login");
   };
 
   const register = async (data) => {

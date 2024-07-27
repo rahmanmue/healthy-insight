@@ -11,6 +11,11 @@ class GejalaService {
     return response.data;
   }
 
+  async searchGejala(data) {
+    const response = await axiosInstance.get(`/gejala/search?data=${data}`);
+    return response.data;
+  }
+
   async createGejala(data) {
     const response = await axiosInstance.post("/gejala", data);
     return response.data;

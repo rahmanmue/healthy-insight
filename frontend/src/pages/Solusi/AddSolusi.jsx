@@ -82,7 +82,7 @@ const AddSolusi = () => {
             </label>
             <Select
               name="id_penyakit"
-              className="capitalize py-3 ps-4 pe-5 block w-full border-2 border-gray-200 bg-white rounded-lg text-md font-medium focus:border-blue-500 focus:border-1 focus:ring-blue-500 focus:outline-none"
+              className="py-3 ps-4 pe-5 block w-full border-2 border-gray-200 bg-white rounded-lg text-md font-medium focus:border-blue-500 focus:border-1 focus:ring-blue-500 focus:outline-none"
               value={data.id_penyakit}
               onChange={handleInput}
               required

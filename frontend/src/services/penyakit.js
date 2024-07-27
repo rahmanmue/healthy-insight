@@ -11,6 +11,11 @@ class PenyakitService {
     return response.data;
   }
 
+  async searhPenyakit(data) {
+    const response = await axiosInstance.get(`/penyakit/search?data=${data}`);
+    return response.data;
+  }
+
   async createPenyakit(data) {
     const response = await axiosInstance.post("/penyakit", data);
     return response.data;

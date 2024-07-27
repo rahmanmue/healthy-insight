@@ -41,11 +41,6 @@ const menuUser = [
 ];
 const menuAdmin = [
   {
-    icon: <MdOutlineCases />,
-    menu: "Data Kasus",
-    toLink: "/admin/kasus",
-  },
-  {
     icon: <RiHealthBookLine />,
     menu: "Penyakit",
     toLink: "/admin/penyakit",
@@ -56,19 +51,24 @@ const menuAdmin = [
     toLink: "/admin/gejala",
   },
   {
-    icon: <MdOutlineHealthAndSafety />,
-    menu: "Basis Pengetahuan",
-    toLink: "/admin/basis-pengetahuan",
-  },
-  {
     icon: <AiOutlineSolution />,
     menu: "Solusi",
     toLink: "/admin/solusi",
   },
   {
+    icon: <MdOutlineHealthAndSafety />,
+    menu: "Basis Pengetahuan",
+    toLink: "/admin/basis-pengetahuan",
+  },
+  {
+    icon: <MdOutlineCases />,
+    menu: "Data Kasus",
+    toLink: "/admin/kasus",
+  },
+  {
     icon: <FaRegUser />,
     menu: "Akun",
-    toLink: "/admin/user",
+    toLink: "/admin/akun",
   },
 ];
 
@@ -103,7 +103,7 @@ const Sidebar = () => {
           Stunting Diagnosis
         </h1>
       </div>
-      <ul className="flex flex-col p-4">
+      <ul className="flex flex-col justify-start p-4">
         {role === "admin"
           ? menuAdmin.map((item, index) => (
               <NavLink

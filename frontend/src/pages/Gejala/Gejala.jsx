@@ -2,7 +2,16 @@ import { useState, useEffect } from "react";
 import GejalaService from "../../services/gejala";
 import ModalGejala from "./ModalGejala";
 import { IoMdAdd } from "react-icons/io";
-import { swalAdd, swalUpdate, swalDelete } from "../../utils/Swal";
+import {
+  swalAdd,
+  swalUpdate,
+  swalDelete,
+  swalError,
+  swalFail,
+} from "../../utils/Swal";
+import { FaRegTrashAlt } from "react-icons/fa";
+import { MdEdit } from "react-icons/md";
+import Search from "../../components/Search/Search";
 
 const gejalaService = new GejalaService();
 
@@ -13,10 +22,6 @@ const Gejala = () => {
   // show modal
   const [open, setOpen] = useState(false);
   const [itemData, setItemData] = useState({});
-
-  const handleShowDelete = (id) => {
-    swalDelete(id, deleteData);
-  };
 
   const handleOpen = (itemData) => {
     setItemData(itemData || {});
@@ -53,11 +58,23 @@ const Gejala = () => {
   };
 
   const deleteData = async (id) => {
+    swalDelete(async () => {
+      await await gejalaService.deleteGejala(id);
+      await getAll();
+    });
+  };
+
+  const handleSearch = async (data) => {
     try {
-      await gejalaService.deleteGejala(id);
-      getAll();
+      const results = await gejalaService.searchGejala(data);
+      if (results.length === 0) {
+        swalFail();
+        return;
+      }
+      setGejala(results);
     } catch (error) {
       console.log(error);
+      swalError();
     }
   };
 
@@ -70,13 +87,19 @@ const Gejala = () => {
       <div className="flex justify-between mb-5">
         <h1 className="text-3xl font-bold">Gejala</h1>
         <button
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded flex items-center gap-1 focus:outline-none focus:shadow-outline"
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg uppercase flex items-center gap-1 focus:outline-none focus:shadow-outline"
           type="button"
           onClick={() => handleOpen()}
         >
           <IoMdAdd className="inline text-xl" /> Gejala
         </button>
       </div>
+
+      <Search
+        handleSearch={handleSearch}
+        handleRefresh={getAll}
+        placeholder="Gejala / Bobot"
+      />
 
       <ModalGejala
         open={open}
@@ -125,10 +148,10 @@ const Gejala = () => {
                       <td className="px-6 py-4 whitespace-wrap text-sm font-bold text-gray-800 ">
                         {index + 1}
                       </td>
-                      <td className="px-6 py-4 whitespace-wrap text-sm text-gray-800 ">
+                      <td className="px-6 py-4 whitespace-wrap text-md text-gray-800 ">
                         {item.gejala}
                       </td>
-                      <td className="px-6 py-4 whitespace-wrap text-center text-sm text-gray-800 ">
+                      <td className="px-6 py-4 whitespace-wrap text-center text-md text-gray-800 ">
                         {item.nilai_bobot}
                       </td>
                       <td className="px-6 py-4 whitespace-wrap  text-sm font-bold flex justify-center gap-2">
@@ -137,14 +160,14 @@ const Gejala = () => {
                           type="button"
                           className="inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-yellow-500 text-white px-2 py-2 hover:bg-yellow-600 focus:outline-none"
                         >
-                          EDIT
+                          <MdEdit className="text-lg" />
                         </button>
                         <button
-                          onClick={() => handleShowDelete(item.id)}
+                          onClick={() => deleteData(item.id)}
                           type="button"
                           className="inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-red-500 text-white px-2 py-2 hover:bg-red-600 focus:outline-none"
                         >
-                          HAPUS
+                          <FaRegTrashAlt className="text-lg" />
                         </button>
                       </td>
                     </tr>

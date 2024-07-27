@@ -5,6 +5,8 @@ import GejalaService from "../../services/gejala";
 import ModalBasisPengetahuan from "./ModalBasisPengetahuan";
 import { swalAdd, swalUpdate, swalDelete } from "../../utils/Swal";
 import { IoMdAdd } from "react-icons/io";
+import { FaRegTrashAlt } from "react-icons/fa";
+import { MdEdit } from "react-icons/md";
 
 const gejalaService = new GejalaService();
 const basisPengetahuanService = new BasisPengetahuanService();
@@ -17,10 +19,6 @@ const DetailBasisPengetahuan = () => {
   // show modal
   const [open, setOpen] = useState(false);
   const [itemData, setItemData] = useState({});
-
-  const handleShowDelete = (id) => {
-    swalDelete(id, deleteData);
-  };
 
   const handleOpen = (itemData) => {
     setItemData(itemData || {});
@@ -74,12 +72,10 @@ const DetailBasisPengetahuan = () => {
   };
 
   const deleteData = async (id) => {
-    try {
+    swalDelete(async () => {
       await basisPengetahuanService.deleteGejalaBp(id);
-      getDetail();
-    } catch (error) {
-      console.log(error);
-    }
+      await getDetail();
+    });
   };
 
   useEffect(() => {
@@ -96,10 +92,10 @@ const DetailBasisPengetahuan = () => {
         </h1>
 
         <button
-          className="inline-flex w-full justify-center items-center rounded-md bg-blue-600 px-5 py-2 text-md font-bold text-white shadow-sm hover:bg-blue-500 sm:mr-2 sm:w-auto"
+          className="inline-flex w-full justify-center items-center rounded-lg uppercase bg-blue-600 px-5 py-2 text-md font-bold text-white shadow-sm hover:bg-blue-500 sm:mr-2 sm:w-auto"
           onClick={() => handleOpen()}
         >
-          <IoMdAdd className="mr-2" /> Tambah Gejala
+          <IoMdAdd className="mr-2" /> Gejala
         </button>
       </div>
 
@@ -142,10 +138,10 @@ const DetailBasisPengetahuan = () => {
                 <tbody className="divide-y divide-gray-200 ">
                   {data?.gejala?.map((item, index) => (
                     <tr key={index}>
-                      <td className="px-6 py-4 whitespace-wrap text-sm font-bold text-gray-800 ">
+                      <td className="px-6 py-4 whitespace-wrap text-md font-bold text-gray-800 ">
                         {index + 1}
                       </td>
-                      <td className="px-6 py-4 whitespace-wrap text-sm text-gray-800 ">
+                      <td className="px-6 py-4 whitespace-wrap text-md text-gray-800 ">
                         {item.gejala}
                       </td>
 
@@ -154,14 +150,14 @@ const DetailBasisPengetahuan = () => {
                           onClick={() => handleOpen(item)}
                           className="inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-yellow-500 text-white px-2 py-2 hover:bg-yellow-600 focus:outline-none"
                         >
-                          EDIT
+                          <MdEdit className="text-lg" />
                         </button>
                         <button
                           type="button"
-                          onClick={() => handleShowDelete(item.id)}
+                          onClick={() => deleteData(item.id)}
                           className="inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-red-500 text-white px-2 py-2 hover:bg-red-600 focus:outline-none"
                         >
-                          HAPUS
+                          <FaRegTrashAlt className="text-lg" />
                         </button>
                       </td>
                     </tr>

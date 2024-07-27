@@ -151,7 +151,7 @@ const EditSolusi = () => {
             />
           </div>
           <button
-            className="font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-5 bg-yellow-400 hover:bg-yellow-500 text-white w-full"
+            className="font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-5 bg-blue-500 hover:bg-blue-600 text-white w-full"
             type="submit"
           >
             Simpan

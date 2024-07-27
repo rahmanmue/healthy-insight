@@ -2,7 +2,16 @@ import { useState, useEffect } from "react";
 import PenyakitService from "../../services/penyakit";
 import ModalPenyakit from "./ModalPenyakit";
 import { IoMdAdd } from "react-icons/io";
-import { swalAdd, swalUpdate, swalDelete } from "../../utils/Swal";
+import { FaRegTrashAlt } from "react-icons/fa";
+import { MdEdit } from "react-icons/md";
+import {
+  swalAdd,
+  swalUpdate,
+  swalDelete,
+  swalError,
+  swalFail,
+} from "../../utils/Swal";
+import Search from "../../components/Search/Search";
 
 const penyakitService = new PenyakitService();
 
@@ -12,10 +21,6 @@ const Penyakit = () => {
   // show modal
   const [open, setOpen] = useState(false);
   const [itemData, setItemData] = useState({});
-
-  const handleShowDelete = async (id) => {
-    swalDelete(id, deleteData);
-  };
 
   const handleOpen = (itemData) => {
     setItemData(itemData || {});
@@ -51,12 +56,24 @@ const Penyakit = () => {
     }
   };
 
-  const deleteData = async (id) => {
-    try {
+  const deleteData = (id) => {
+    swalDelete(async () => {
       await penyakitService.deletePenyakit(id);
-      getAllPenyakit();
+      await getAllPenyakit();
+    }, "Data yang dihapus termasuk data solusi dan basis pengetahuan yang terkait");
+  };
+
+  const handleSearch = async (data) => {
+    try {
+      const results = await penyakitService.searhPenyakit(data);
+      if (results.length === 0) {
+        swalFail();
+        return;
+      }
+      setPenyakit(results);
     } catch (error) {
       console.log(error);
+      swalError();
     }
   };
 
@@ -69,13 +86,19 @@ const Penyakit = () => {
       <div className="flex justify-between mb-5">
         <h1 className="text-3xl font-bold">Penyakit</h1>
         <button
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 flex items-center gap-1 rounded focus:outline-none focus:shadow-outline"
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 flex items-center gap-1 rounded-lg uppercase focus:outline-none focus:shadow-outline"
           type="button"
           onClick={() => handleOpen()}
         >
           <IoMdAdd className="inline text-xl" /> Penyakit
         </button>
       </div>
+
+      <Search
+        handleRefresh={getAllPenyakit}
+        handleSearch={handleSearch}
+        placeholder="Penyakit"
+      />
 
       <ModalPenyakit
         open={open}
@@ -115,10 +138,10 @@ const Penyakit = () => {
                 <tbody className="divide-y divide-gray-200 ">
                   {penyakit?.map((item, index) => (
                     <tr key={index}>
-                      <td className="px-6 py-4 whitespace-wrap text-sm font-bold text-gray-800 ">
+                      <td className="px-6 py-4 whitespace-wrap text-md font-bold text-gray-800 ">
                         {index + 1}
                       </td>
-                      <td className="px-6 py-4 whitespace-wrap text-md capitalize text-gray-800 ">
+                      <td className="px-6 py-4 whitespace-wrap text-md text-gray-800 ">
                         {item.penyakit}
                       </td>
                       <td className="px-6 py-4 whitespace-wrap  text-sm font-bold flex justify-end gap-2">
@@ -127,14 +150,14 @@ const Penyakit = () => {
                           type="button"
                           className="inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-yellow-500 text-white px-2 py-2 hover:bg-yellow-600 focus:outline-none"
                         >
-                          EDIT
+                          <MdEdit className="text-lg" />
                         </button>
                         <button
-                          onClick={() => handleShowDelete(item.id)}
+                          onClick={() => deleteData(item.id)}
                           type="button"
                           className="nline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-red-500 text-white px-2 py-2 hover:bg-red-600 focus:outline-none"
                         >
-                          HAPUS
+                          <FaRegTrashAlt className="text-lg" />
                         </button>
                       </td>
                     </tr>

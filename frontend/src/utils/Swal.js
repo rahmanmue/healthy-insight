@@ -18,23 +18,51 @@ export const swalUpdate = () => {
   });
 };
 
-export const swalDelete = (id, deleteData) => {
+export const swalDelete = (
+  deleteData,
+  message = "Data yang di hapus tidak dapat dikembalikan"
+) => {
   Swal.fire({
     title: "Apa anda yakin?",
-    text: "Data yang di hapus tidak dapat dikembalikan",
+    text: message,
     icon: "warning",
     showCancelButton: true,
     confirmButtonColor: "#3085d6",
     cancelButtonColor: "#d33",
     confirmButtonText: "Ya, Hapus",
-  }).then(async (result) => {
+  }).then((result) => {
     if (result.isConfirmed) {
-      await deleteData(id);
-      Swal.fire({
-        title: "Deleted!",
-        text: "Data berhasil di hapus",
-        icon: "success",
-      });
+      deleteData()
+        .then(() => {
+          Swal.fire({
+            title: "Deleted!",
+            text: "Data berhasil di hapus",
+            icon: "success",
+          });
+        })
+        .catch((error) => {
+          swalError(error.message);
+        });
     }
+  });
+};
+
+export const swalFail = () => {
+  Swal.fire({
+    position: "center",
+    icon: "error",
+    title: "Data tidak ditemukan!",
+    showConfirmButton: false,
+    timer: 1500,
+  });
+};
+
+export const swalError = (message = "Something went wrong") => {
+  Swal.fire({
+    position: "center",
+    icon: "error",
+    title: message,
+    showConfirmButton: false,
+    timer: 1500,
   });
 };
