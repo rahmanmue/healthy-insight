@@ -6,7 +6,7 @@ export const loginUser = async (req, res) => {
     res.status(200).json({ accessToken: accessToken });
   } catch (error) {
     if (error.message === "Email not found") {
-      res.status(404).json({ message: "Data tidak ditemukan" });
+      res.status(404).json({ message: "Email tidak ditemukan" });
     } else if (error.message === "Wrong password") {
       res.status(404).json({ message: "Password salah" });
     } else {

@@ -21,6 +21,8 @@ export const getAllCase = async () => {
       acc[curr.kode_case] = {
         kode_case: curr.kode_case,
         name: curr.name,
+        umur: curr.umur,
+        jenis_kelamin: curr.jenis_kelamin,
         diagnosis: [],
       };
     }
@@ -212,27 +214,11 @@ export const getHasilPerhitunganByKodeCase = async (kode_case) => {
     group: ["kode_basis_pengetahuan"],
   });
 
-  const filteredData = results.map((item) => {
-    const checked = kode_bp.some((bp) => {
+  const filteredData = results.filter((item) => {
+    return kode_bp.some((bp) => {
       return bp.kode_basis_pengetahuan === item.kode_basis_pengetahuan;
     });
-
-    if (checked) {
-      return item;
-    }
   });
-
-  //filter results by kode_bp
-  // let data = [];
-  // for (let i = 0; i < results.length; i++) {
-  //   for (let j = 0; j < kode_bp.length; j++) {
-  //     if (
-  //       results[i].kode_basis_pengetahuan === kode_bp[j].kode_basis_pengetahuan
-  //     ) {
-  //       data.push(results[i]);
-  //     }
-  //   }
-  // }
 
   return filteredData;
 };

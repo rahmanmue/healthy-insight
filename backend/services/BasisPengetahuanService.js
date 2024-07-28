@@ -56,7 +56,7 @@ export const getBasisPengetahuanByKode = async (kode) => {
     include: [
       {
         model: Penyakit,
-        attributes: ["penyakit"],
+        attributes: ["id", "penyakit"],
       },
       {
         model: Gejala,
@@ -76,6 +76,7 @@ export const getBasisPengetahuanByKode = async (kode) => {
   }));
 
   const data = {
+    id_penyakit: penyakit.id,
     penyakit: penyakit.penyakit,
     gejala: gejala,
   };
@@ -178,6 +179,21 @@ export const updateBasisPengetahuanPenyakit = async (data) => {
 };
 
 export const updateBasisPengetahuanGejala = async (data) => {
+  // const getKodeBp = await BasisPengetahuan.findOne({
+  //   where: {
+  //     id: data.id,
+  //   },
+  // });
+
+  // const check = await BasisPengetahuan.findOne({
+  //   where: {
+  //     kode_basis_pengetahuan: getKodeBp.kode_basis_pengetahuan,
+  //     id_gejala: data.id_gejala,
+  //   },
+  // });
+
+  // if (check) throw new Error("Gejala sudah ada di basis pengetahuan ini");
+
   await BasisPengetahuan.update(data, {
     where: {
       id: data.id,

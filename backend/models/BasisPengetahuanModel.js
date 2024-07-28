@@ -13,6 +13,7 @@ const BasisPengetahuan = db.define(
     },
     kode_basis_pengetahuan: {
       type: DataTypes.STRING,
+      allowNull: false,
     },
     id_penyakit: {
       type: DataTypes.INTEGER,

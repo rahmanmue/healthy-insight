@@ -27,7 +27,7 @@ app.use(express.json());
 app.use(router);
 const connectDB = async () => {
   try {
-    await db.sync();
+    await db.sync({ alter: true });
     console.log("Database connected");
   } catch (err) {
     console.log(err);

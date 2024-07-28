@@ -1,6 +1,7 @@
 import { DataTypes } from "sequelize";
 import db from "../config/db.js";
 import Gejala from "./GejalaModel.js";
+import Solusi from "./SolusiModel.js";
 
 const Case = db.define(
   "case",
@@ -23,7 +24,7 @@ const Case = db.define(
       type: DataTypes.FLOAT,
     },
     jenis_kelamin: {
-      type: DataTypes.ENUM("L", "P"),
+      type: DataTypes.ENUM("Laki-laki", "Perempuan"),
     },
     id_gejala: {
       type: DataTypes.INTEGER,
@@ -37,6 +38,12 @@ const Case = db.define(
     },
     id_solusi: {
       type: DataTypes.INTEGER,
+      references: {
+        model: Solusi,
+        key: "id",
+      },
+      onDelete: "CASCADE",
+      onUpdate: "CASCADE",
     },
   },
   {

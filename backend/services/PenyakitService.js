@@ -1,4 +1,5 @@
 import Penyakit from "../models/PenyakitModel.js";
+import { Op } from "sequelize";
 
 export const getAllPenyakit = async () => {
   const penyakit = await Penyakit.findAll({
@@ -27,7 +28,9 @@ export const getPenyakitByData = async (data) => {
   const penyakit = await Penyakit.findAll({
     attributes: ["id", "penyakit"],
     where: {
-      penyakit: data,
+      penyakit: {
+        [Op.like]: `%${data}%`,
+      },
     },
   });
   return {
