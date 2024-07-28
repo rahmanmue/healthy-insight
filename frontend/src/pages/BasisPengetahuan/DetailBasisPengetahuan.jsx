@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import BasisPengetahuanService from "../../services/basisPengetahuan";
 import GejalaService from "../../services/gejala";
 import ModalBasisPengetahuan from "./ModalBasisPengetahuan";
-import { swalAdd, swalUpdate, swalDelete } from "../../utils/Swal";
+import { swalAdd, swalUpdate, swalDelete, swalError } from "../../utils/Swal";
 import { IoMdAdd } from "react-icons/io";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { MdEdit } from "react-icons/md";
@@ -49,7 +49,7 @@ const DetailBasisPengetahuan = () => {
     try {
       const newData = {
         kode_basis_pengetahuan: kode_bp,
-        id_penyakit: data.penyakit.id,
+        id_penyakit: data.id_penyakit,
         id_gejala: id_gejala,
       };
 
@@ -67,6 +67,7 @@ const DetailBasisPengetahuan = () => {
       swalUpdate();
       getDetail();
     } catch (error) {
+      swalError();
       console.log(error);
     }
   };
@@ -88,7 +89,7 @@ const DetailBasisPengetahuan = () => {
     <>
       <div className="flex justify-between mb-7">
         <h1 className="text-3xl font-bold capitalize">
-          {`Detail Basis Pengetahuan ${kode_bp} (${data?.penyakit?.penyakit})`}
+          {`Detail Basis Pengetahuan ${kode_bp} (${data?.penyakit})`}
         </h1>
 
         <button

@@ -26,7 +26,7 @@ const ModalGejala = ({ open, handleOpen, item, addData, updateData }) => {
     }
 
     if (title === "Tambah Gejala") {
-      if (data.gejala !== "" || data.nilai_bobot !== "") {
+      if (data.gejala !== "" && data.nilai_bobot !== "") {
         await addData({
           gejala: data.gejala,
           nilai_bobot: data.nilai_bobot,

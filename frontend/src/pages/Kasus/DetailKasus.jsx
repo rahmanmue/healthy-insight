@@ -55,9 +55,7 @@ const DetailKasus = () => {
           <tr>
             <td className="w-40 text-md font-semibold">Jenis Kelamin</td>
             <td className="font-medium text-md pr-1">:</td>
-            <td className="font-medium text-md">
-              {data?.jenis_kelamin === "L" ? "Laki-laki" : "Perempuan"}
-            </td>
+            <td className="font-medium text-md">{data?.jenis_kelamin}</td>
           </tr>
           {data?.gejala?.map((x, index) =>
             index == 0 ? (

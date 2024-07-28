@@ -41,6 +41,9 @@ const AddSolusi = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
+      data.persentase_awal = parseInt(data.persentase_awal);
+      data.persentase_akhir = parseInt(data.persentase_akhir);
+
       if (data.persentase_awal > data.persentase_akhir) {
         notify(
           "error",
@@ -83,7 +86,7 @@ const AddSolusi = () => {
             <Select
               name="id_penyakit"
               className="py-3 ps-4 pe-5 block w-full border-2 border-gray-200 bg-white rounded-lg text-md font-medium focus:border-blue-500 focus:border-1 focus:ring-blue-500 focus:outline-none"
-              value={data.id_penyakit}
+              value={data.id_penyakit || ""}
               onChange={handleInput}
               required
             >
@@ -112,6 +115,7 @@ const AddSolusi = () => {
                 onChange={handleInput}
                 min="0"
                 max="100"
+                required
               />
             </div>
             <div className="w-1/2">
@@ -124,6 +128,7 @@ const AddSolusi = () => {
                 onChange={handleInput}
                 min="0"
                 max="100"
+                required
               />
             </div>
           </div>

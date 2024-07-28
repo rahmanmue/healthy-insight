@@ -12,15 +12,11 @@ const auth = new AuthService();
 const AuthContextProvider = ({ children }) => {
   const navigate = useNavigate();
   const [role, setRole] = useState(localStorage.getItem("role"));
-  const [token, setToken] = useState(localStorage.getItem("token") || null);
   const [userId, setUserId] = useState(localStorage.getItem("userId") || null);
   const login = async ({ email, password }) => {
     try {
       const { accessToken } = await auth.login(email, password);
-
       localStorage.setItem("token", accessToken);
-      setToken(accessToken);
-      console.log(token);
       axiosInstance.defaults.headers.common[
         "Authorization"
       ] = `Bearer ${accessToken}`;
@@ -41,7 +37,6 @@ const AuthContextProvider = ({ children }) => {
 
   const logout = () => {
     axiosInstance.defaults.headers.common["Authorization"] = null;
-    setToken(null);
     setRole(null);
     setUserId(null);
     localStorage.removeItem("token");

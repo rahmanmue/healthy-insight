@@ -89,6 +89,7 @@ const Register = () => {
           placeholder="Email"
           value={data.email}
           onChange={(e) => handleOnChange(e)}
+          required
         />
         <Input
           label="Password"

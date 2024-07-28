@@ -64,6 +64,7 @@ const Login = () => {
           placeholder="Email"
           defaultValue={data.password}
           onChange={(e) => handleOnChange(e)}
+          required
         />
         <Input
           label="Password"

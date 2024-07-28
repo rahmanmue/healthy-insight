@@ -52,12 +52,23 @@ const Konsultasi = () => {
     e.preventDefault();
 
     try {
-      console.log(data);
       if (data.name === "" || data.umur === "" || data.jenis_kelamin === "") {
         Swal.fire({
           icon: "warning",
           title: "Oops...",
           text: "Data harus diisi semua!",
+        });
+        return;
+      }
+
+      let umur = parseInt(data.umur);
+
+      if (umur < 0 && umur > 5) {
+        console.log(umur);
+        Swal.fire({
+          icon: "warning",
+          title: "Oops...",
+          text: "Umur harus diantara 0 - 5 tahun!",
         });
         return;
       }
@@ -76,12 +87,12 @@ const Konsultasi = () => {
         title: "Success",
         text: "Konsultasi berhasil dilakukan!",
       });
-      // setData({
-      //   name: "",
-      //   umur: "",
-      //   jenis_kelamin: "",
-      // });
-      // setGejalaSelected([]);
+      setData({
+        name: "",
+        umur: "",
+        jenis_kelamin: "",
+      });
+      setGejalaSelected([]);
 
       const timeOut = setTimeout(() => {
         navigate(`/kasus/hasil/${kode_case}`);
@@ -115,7 +126,7 @@ const Konsultasi = () => {
         <div className="flex items-center gap-10">
           <div className="w-1/2">
             <Input
-              label="Umur"
+              label="Umur (0-5 Tahun)"
               name="umur"
               type="number"
               placeholder="Masukan Umur"
@@ -134,7 +145,7 @@ const Konsultasi = () => {
                   type="radio"
                   placeholder="Masukan Jenis Kelamin"
                   id="laki"
-                  value="L"
+                  value="Laki-laki"
                   onChange={handleInput}
                 />
                 <label
@@ -149,7 +160,7 @@ const Konsultasi = () => {
                   name="jenis_kelamin"
                   type="radio"
                   placeholder="Masukan Jenis Kelamin"
-                  value="P"
+                  value="Perempuan"
                   id="perempuan"
                   onChange={handleInput}
                 />

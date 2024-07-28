@@ -24,18 +24,21 @@ const ModalBasisPengetahuan = ({
 
   const handleSubmit = async () => {
     if (title === "Edit Gejala") {
-      await updateData({
-        id: item.id,
-        id_gejala: data.id_gejala ? data.id_gejala : item.id_gejala,
-      });
+      console.log(data);
+      if (data.id_gejala !== "") {
+        await updateData({
+          id: item.id,
+          id_gejala: data.id_gejala,
+        });
+      }
     }
 
     if (title === "Tambah Gejala") {
-      if (data.id_gejala === "") {
+      if (data.id_gejala !== "") {
+        await addData(data.id_gejala);
+      } else {
         notify("error", "Data tidak boleh kosong", 1500);
         return;
-      } else {
-        await addData(data.id_gejala);
       }
     }
 
