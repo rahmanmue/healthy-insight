@@ -5,10 +5,16 @@ import Penyakit from "../models/PenyakitModel.js";
 import crypto from "crypto";
 
 const getInputData = async (data) => {
-  data.forEach(async (item) => {
-    const nilai_bobot = await getNilaiBobotGejala(item);
-    item.nilai_bobot = nilai_bobot;
-  });
+  for (const item of data) {
+    const gejala = await Gejala.findOne({
+      attributes: ["nilai_bobot"],
+      where: {
+        id: item.id_gejala,
+      },
+    });
+
+    item.nilai_bobot = gejala.nilai_bobot;
+  }
   return data;
 };
 
@@ -32,49 +38,21 @@ const getBasisPengetahuanGejalaByPenyakit = async (data) => {
     where: {
       id_penyakit: data.id_penyakit,
     },
+    include: [
+      {
+        model: Gejala,
+        attributes: ["nilai_bobot"],
+      },
+    ],
   });
 
   return gejalaPenyakit;
 };
 
-const getNilaiBobotGejala = async (data) => {
-  const gejala = await Gejala.findOne({
-    where: {
-      id: data.id_gejala,
-    },
-    attributes: ["nilai_bobot"],
-  });
-  return gejala.nilai_bobot;
-};
-
-const getIdSolusi = async (data) => {
-  const { penyakit } = data;
-  const solusi_by_penyakit = await Solusi.findAll({
-    where: {
-      id_penyakit: penyakit.id,
-    },
-  });
-
-  const diagnosis = parseInt(data.nilai_diagnosis * 100);
-  let id_solusi;
-  let solusi;
-  solusi_by_penyakit.forEach((item) => {
-    if (
-      diagnosis >= item.persentase_awal &&
-      diagnosis <= item.persentase_akhir
-    ) {
-      id_solusi = item.id;
-      solusi = item.solusi;
-    }
-  });
-
-  return { id_solusi, solusi };
-};
-
 export const getHasilPerhitunganKNN = async (dataGejala, dataInput = {}) => {
   try {
     // setiap gejala dicocokan dengan basis pengetahuan
-    const data = await getInputData(dataGejala);
+    const dataInputGejala = await getInputData(dataGejala);
 
     // 1. mencari basis pengetahuan penyakit
     const basis_pengetahuan = await getBasisPengetahuanPenyakit();
@@ -83,7 +61,18 @@ export const getHasilPerhitunganKNN = async (dataGejala, dataInput = {}) => {
       .randomBytes(2)
       .toString("hex")}`.toUpperCase();
 
-    const results = await Promise.all(
+    const dataCreatedCase = dataInputGejala.map((item) => {
+      return {
+        kode_case: kode_case,
+        name: dataInput.name ?? null,
+        umur: dataInput.umur ?? null,
+        jenis_kelamin: dataInput.jenis_kelamin ?? null,
+        id_gejala: item.id_gejala,
+      };
+    });
+
+    // 2. perhitungan similarity
+    const calculationResults = await Promise.all(
       basis_pengetahuan.map(async (item) => {
         const gejala_penyakit = await getBasisPengetahuanGejalaByPenyakit(item);
         const total_gejala = gejala_penyakit.length;
@@ -92,14 +81,15 @@ export const getHasilPerhitunganKNN = async (dataGejala, dataInput = {}) => {
           await gejala_penyakit.reduce(
             async (accPromise, gejala) => {
               const acc = await accPromise;
-              acc.total_bobot += await getNilaiBobotGejala(gejala);
 
-              data.forEach((element) => {
+              dataInputGejala.forEach((element) => {
                 if (element.id_gejala === gejala.id_gejala) {
                   acc.total_similarity_gejala += element.nilai_bobot;
                   acc.match_count += 1;
                 }
               });
+
+              acc.total_bobot += gejala.gejala.nilai_bobot;
 
               return acc;
             },
@@ -114,41 +104,41 @@ export const getHasilPerhitunganKNN = async (dataGejala, dataInput = {}) => {
         return {
           penyakit: item.penyakit,
           kode_basis_pengetahuan: item.kode_basis_pengetahuan,
-          total_similarity_gejala,
-          total_bobot,
-          match_count,
-          total_gejala,
-          nilai_diagnosis,
+          total_similarity_gejala: total_similarity_gejala,
+          total_bobot: total_bobot,
+          match_count: match_count,
+          total_gejala: total_gejala,
+          nilai_diagnosis: nilai_diagnosis,
         };
       })
     );
 
-    // 10. mengurutkan data berdasarkan nilai diagnosis
-    results.sort((a, b) => b.nilai_diagnosis - a.nilai_diagnosis);
-    results.forEach(async (item) => {
-      item.solusi = await getIdSolusi(item);
-    });
+    // 3. mencari solusi berdasarkan nilai diagnosis
+    for (const item of calculationResults) {
+      const filter_solusi = await Solusi.findAll({
+        where: {
+          id_penyakit: item.penyakit.id,
+        },
+      });
+      const diagnosis = parseInt(item.nilai_diagnosis * 100);
+      item.id_solusi = null;
+      item.solusi = null;
 
-    // 12. filtering data
-    const final = await Promise.all(
-      results.map(async (item) => {
-        let solusi = await getIdSolusi(item);
-        return data.map((element) => ({
-          kode_case: kode_case,
-          kode_basis_pengetahuan: item.kode_basis_pengetahuan,
-          name: dataInput.name ?? null,
-          umur: dataInput.umur ?? null,
-          jenis_kelamin: dataInput.jenis_kelamin ?? null,
-          id_gejala: element.id_gejala,
-          nilai_diagnosis: item.nilai_diagnosis,
-          id_solusi: solusi.id_solusi ?? null,
-        }));
-      })
-    );
+      filter_solusi.forEach((element) => {
+        if (
+          diagnosis >= parseInt(element.persentase_awal) &&
+          diagnosis <= parseInt(element.persentase_akhir)
+        ) {
+          item.id_solusi = element.id;
+          item.solusi = element.solusi;
+        }
+      });
+    }
 
-    const final_result_case = final.flat();
+    // 4. sorting data
+    calculationResults.sort((a, b) => b.nilai_diagnosis - a.nilai_diagnosis);
 
-    return { results, final_result_case };
+    return { dataCreatedCase, calculationResults };
   } catch (error) {
     console.log(error);
     throw error;

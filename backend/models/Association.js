@@ -34,12 +34,6 @@ Case.belongsTo(Gejala, {
   foreignKey: "id_gejala",
 });
 
-Case.hasMany(Solusi, {
-  foreignKey: "id_solusi",
-  onDelete: "cascade",
-  onUpdate: "cascade",
-});
-
 Penyakit.hasMany(Solusi, {
   foreignKey: "id_penyakit",
   onDelete: "cascade",

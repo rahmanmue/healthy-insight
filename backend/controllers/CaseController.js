@@ -35,9 +35,7 @@ export const searchCase = async (req, res) => {
 
 export const createCaseController = async (req, res) => {
   try {
-    const data = req.body;
-    const dataGejala = data.gejala;
-    const cases = await createCase(dataGejala, data);
+    const cases = await createCase(req.body);
     res.status(cases.status).json(cases.data);
   } catch (error) {
     res.status(500).json({ message: error.message });

@@ -5,14 +5,12 @@ import { Op } from "sequelize";
 
 export const getAllCase = async () => {
   const cases = await Case.findAll({
-    attributes: [
-      "kode_case",
-      "name",
-      "umur",
-      "jenis_kelamin",
-      "kode_basis_pengetahuan",
-      "nilai_diagnosis",
-      "id_solusi",
+    attributes: ["kode_case", "name", "umur", "jenis_kelamin", "id_gejala"],
+    include: [
+      {
+        model: Gejala,
+        attributes: ["gejala"],
+      },
     ],
   });
 
@@ -23,29 +21,22 @@ export const getAllCase = async () => {
         name: curr.name,
         umur: curr.umur,
         jenis_kelamin: curr.jenis_kelamin,
-        diagnosis: [],
+        gejala: [],
       };
     }
 
     if (
-      !acc[curr.kode_case].diagnosis.some(
-        (d) => d.kode_basis_pengetahuan === curr.kode_basis_pengetahuan
-      )
+      !acc[curr.kode_case].gejala.some((d) => d.id_gejala === curr.id_gejala)
     ) {
-      acc[curr.kode_case].diagnosis.push({
-        kode_basis_pengetahuan: curr.kode_basis_pengetahuan,
-        nilai_diagnosis: curr.nilai_diagnosis,
-        id_solusi: curr.id_solusi,
+      acc[curr.kode_case].gejala.push({
+        id_gejala: curr.id_gejala,
+        gejala: curr.gejala.gejala,
       });
     }
     return acc;
   }, {});
 
   const formattedData = Object.values(data);
-
-  formattedData.forEach((item) => {
-    item.diagnosis.sort((a, b) => b.nilai_diagnosis - a.nilai_diagnosis);
-  });
 
   return {
     status: 200,
@@ -65,23 +56,14 @@ export const getCaseByKodeCase = async (kode_case) => {
   }
 
   const data = await Case.findAll({
-    attributes: [
-      "kode_case",
-      "kode_basis_pengetahuan",
-      "name",
-      "umur",
-      "jenis_kelamin",
-      "nilai_diagnosis",
-      "id_gejala",
-      "id_solusi",
-    ],
+    attributes: ["kode_case", "name", "umur", "jenis_kelamin", "id_gejala"],
     where: {
       kode_case: kode_case,
     },
     include: [
       {
         model: Gejala,
-        attributes: ["id", "gejala"],
+        attributes: ["gejala"],
       },
     ],
   });
@@ -94,7 +76,6 @@ export const getCaseByKodeCase = async (kode_case) => {
         umur: item.umur,
         jenis_kelamin: item.jenis_kelamin,
         gejala: [],
-        diagnosis: [],
       };
     }
 
@@ -104,18 +85,6 @@ export const getCaseByKodeCase = async (kode_case) => {
       acc[item.kode_case].gejala.push({
         id_gejala: item.id_gejala,
         gejala: item.gejala.gejala,
-      });
-    }
-
-    if (
-      !acc[item.kode_case].diagnosis.some(
-        (d) => d.kode_basis_pengetahuan === item.kode_basis_pengetahuan
-      )
-    ) {
-      acc[item.kode_case].diagnosis.push({
-        kode_basis_pengetahuan: item.kode_basis_pengetahuan,
-        nilai_diagnosis: item.nilai_diagnosis,
-        id_solusi: item.id_solusi,
       });
     }
 
@@ -130,23 +99,14 @@ export const getCaseByKodeCase = async (kode_case) => {
 
 export const getCaseByData = async (name) => {
   const data = await Case.findAll({
-    attributes: [
-      "kode_case",
-      "kode_basis_pengetahuan",
-      "name",
-      "umur",
-      "jenis_kelamin",
-      "nilai_diagnosis",
-      "id_gejala",
-      "id_solusi",
-    ],
+    attributes: ["kode_case", "name", "umur", "jenis_kelamin", "id_gejala"],
     where: {
       name: { [Op.like]: `%${name}%` },
     },
     include: [
       {
         model: Gejala,
-        attributes: ["id", "gejala"],
+        attributes: ["gejala"],
       },
     ],
   });
@@ -159,7 +119,6 @@ export const getCaseByData = async (name) => {
         umur: item.umur,
         jenis_kelamin: item.jenis_kelamin,
         gejala: [],
-        diagnosis: [],
       };
     }
 
@@ -169,18 +128,6 @@ export const getCaseByData = async (name) => {
       acc[item.kode_case].gejala.push({
         id_gejala: item.id_gejala,
         gejala: item.gejala.gejala,
-      });
-    }
-
-    if (
-      !acc[item.kode_case].diagnosis.some(
-        (d) => d.kode_basis_pengetahuan === item.kode_basis_pengetahuan
-      )
-    ) {
-      acc[item.kode_case].diagnosis.push({
-        kode_basis_pengetahuan: item.kode_basis_pengetahuan,
-        nilai_diagnosis: item.nilai_diagnosis,
-        id_solusi: item.id_solusi,
       });
     }
 
@@ -201,31 +148,16 @@ export const getHasilPerhitunganByKodeCase = async (kode_case) => {
     where: {
       kode_case: kode_case,
     },
-    group: ["id_gejala"],
   });
 
-  const { results } = await getHasilPerhitunganKNN(gejala);
+  const { calculationResults } = await getHasilPerhitunganKNN(gejala);
 
-  const kode_bp = await Case.findAll({
-    attributes: ["kode_basis_pengetahuan"],
-    where: {
-      kode_case: kode_case,
-    },
-    group: ["kode_basis_pengetahuan"],
-  });
-
-  const filteredData = results.filter((item) => {
-    return kode_bp.some((bp) => {
-      return bp.kode_basis_pengetahuan === item.kode_basis_pengetahuan;
-    });
-  });
-
-  return filteredData;
+  return calculationResults;
 };
 
-export const createCase = async (data, dataGejala) => {
-  const { final_result_case } = await getHasilPerhitunganKNN(data, dataGejala);
-  const cases_data = await Case.bulkCreate(final_result_case);
+export const createCase = async (data) => {
+  const { dataCreatedCase } = await getHasilPerhitunganKNN(data.gejala, data);
+  const cases_data = await Case.bulkCreate(dataCreatedCase);
   const kode_case = cases_data[0].kode_case;
 
   return {

@@ -1,7 +1,6 @@
 import { DataTypes } from "sequelize";
 import db from "../config/db.js";
 import Gejala from "./GejalaModel.js";
-import Solusi from "./SolusiModel.js";
 
 const Case = db.define(
   "case",
@@ -12,9 +11,6 @@ const Case = db.define(
       autoIncrement: true,
     },
     kode_case: {
-      type: DataTypes.STRING,
-    },
-    kode_basis_pengetahuan: {
       type: DataTypes.STRING,
     },
     name: {
@@ -32,18 +28,6 @@ const Case = db.define(
         model: Gejala,
         key: "id",
       },
-    },
-    nilai_diagnosis: {
-      type: DataTypes.FLOAT,
-    },
-    id_solusi: {
-      type: DataTypes.INTEGER,
-      references: {
-        model: Solusi,
-        key: "id",
-      },
-      onDelete: "CASCADE",
-      onUpdate: "CASCADE",
     },
   },
   {
