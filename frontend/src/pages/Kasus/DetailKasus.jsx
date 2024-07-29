@@ -171,7 +171,7 @@ const DetailKasus = () => {
           </span>
         </p>
         <div className="my-4 ps-4 pe-5 bg-slate-200 py-3 rounded-sm font-medium text-justify">
-          {cases[0]?.solusi?.solusi}
+          {cases[0]?.solusi}
         </div>
       </div>
     </>

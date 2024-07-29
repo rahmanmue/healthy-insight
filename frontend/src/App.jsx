@@ -15,7 +15,7 @@ import EditSolusi from "./pages/Solusi/EditSolusi";
 import Konsultasi from "./pages/Konsultasi/Konsultasi";
 import MainLayout from "./components/MainLayout/MainLayout";
 import AddSolusi from "./pages/Solusi/AddSolusi";
-// import PrivateRoute from "./routes/PrivateRoute";
+import PrivateRoute from "./routes/PrivateRoute";
 
 function App() {
   return (
@@ -28,27 +28,28 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/kasus/hasil/:kode_case" element={<DetailKasus />} />
 
-          {/* private route admin */}
-          <Route path="/register" element={<Register />} />
-          <Route path="/admin/kasus" element={<Kasus />} />
-          <Route path="/admin/penyakit" element={<Penyakit />} />
-          <Route path="/admin/gejala" element={<Gejala />} />
-          <Route
-            path="/admin/basis-pengetahuan"
-            element={<BasisPengetahuan />}
-          />
-          <Route
-            path="/admin/basis-pengetahuan/add"
-            element={<AddBasisPengetahuan />}
-          />
-          <Route
-            path="/admin/basis-pengetahuan/detail/:kode_bp"
-            element={<DetailBasisPengetahuan />}
-          />
-          <Route path="/admin/solusi" element={<Solusi />} />
-          <Route path="/admin/solusi/edit/:id" element={<EditSolusi />} />
-          <Route path="/admin/solusi/add" element={<AddSolusi />} />
-          <Route path="/admin/akun" element={<Akun />} />
+          <Route element={<PrivateRoute roles={["admin"]} />}>
+            <Route path="/register" element={<Register />} />
+            <Route path="/admin/kasus" element={<Kasus />} />
+            <Route path="/admin/penyakit" element={<Penyakit />} />
+            <Route path="/admin/gejala" element={<Gejala />} />
+            <Route
+              path="/admin/basis-pengetahuan"
+              element={<BasisPengetahuan />}
+            />
+            <Route
+              path="/admin/basis-pengetahuan/add"
+              element={<AddBasisPengetahuan />}
+            />
+            <Route
+              path="/admin/basis-pengetahuan/detail/:kode_bp"
+              element={<DetailBasisPengetahuan />}
+            />
+            <Route path="/admin/solusi" element={<Solusi />} />
+            <Route path="/admin/solusi/edit/:id" element={<EditSolusi />} />
+            <Route path="/admin/solusi/add" element={<AddSolusi />} />
+            <Route path="/admin/akun" element={<Akun />} />
+          </Route>
         </Routes>
       </MainLayout>
     </BrowserRouter>
