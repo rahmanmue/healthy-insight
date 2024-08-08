@@ -100,7 +100,9 @@ export const getHasilPerhitunganKNN = async (dataGejala, dataInput = {}) => {
             })
           );
 
-        const nilai_diagnosis = total_similarity_gejala / total_bobot;
+        const nilai_diagnosis = parseFloat(
+          (total_similarity_gejala / total_bobot).toFixed(2)
+        );
         return {
           penyakit: item.penyakit,
           kode_basis_pengetahuan: item.kode_basis_pengetahuan,
