@@ -1,8 +1,10 @@
 import axiosInstance from "./api";
 
 class CaseService {
-  async getAll() {
-    const response = await axiosInstance.get("/cases");
+  async getAll(page = 1, pageSize = 5) {
+    const response = await axiosInstance.get(
+      `/cases?page=${page}&pageSize=${pageSize}`
+    );
     return response.data;
   }
 
@@ -11,8 +13,10 @@ class CaseService {
     return response.data;
   }
 
-  async searchCase(name) {
-    const response = await axiosInstance.get(`/cases/search?name=${name}`);
+  async searchCase(name, page = 1, pageSize = 5) {
+    const response = await axiosInstance.get(
+      `/cases/search?name=${name}&page=${page}&pageSize=${pageSize}`
+    );
     return response.data;
   }
 

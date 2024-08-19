@@ -12,11 +12,16 @@ import {
   swalFail,
 } from "../../utils/Swal";
 import Search from "../../components/Search/Search";
+import Pagination from "../../components/Pagination/Pagination";
 
 const penyakitService = new PenyakitService();
 
 const Penyakit = () => {
   const [penyakit, setPenyakit] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
+  const [searchData, setSearchData] = useState("");
+  const pageSize = 3;
 
   // show modal
   const [open, setOpen] = useState(false);
@@ -27,10 +32,34 @@ const Penyakit = () => {
     setOpen(!open);
   };
 
+  const handlePageChange = async (page) => {
+    setCurrentPage(page);
+    if (searchData !== "") {
+      const results = await penyakitService.searchPenyakit(
+        searchData,
+        page,
+        pageSize
+      );
+      if (results.data.length === 0) {
+        swalFail();
+        setSearchData("");
+        return;
+      }
+      setPenyakit(results.data);
+      setCurrentPage(results.currentPage);
+    } else {
+      const response = await penyakitService.getAll(page, pageSize);
+      setPenyakit(response.data);
+      setCurrentPage(response.currentPage);
+    }
+  };
+
   const getAllPenyakit = async () => {
     try {
-      const data = await penyakitService.getAll();
-      setPenyakit(data);
+      const response = await penyakitService.getAll(1, pageSize);
+      setPenyakit(response.data);
+      setCurrentPage(response.currentPage);
+      setTotalPages(response.totalPages);
     } catch (error) {
       console.log(error);
     }
@@ -65,12 +94,16 @@ const Penyakit = () => {
 
   const handleSearch = async (data) => {
     try {
-      const results = await penyakitService.searhPenyakit(data);
-      if (results.length === 0) {
+      setSearchData(data);
+      const results = await penyakitService.searchPenyakit(data);
+      if (results.data.length === 0) {
         swalFail();
+        setSearchData("");
         return;
       }
-      setPenyakit(results);
+      setPenyakit(results.data);
+      setCurrentPage(results.currentPage);
+      setTotalPages(results.totalPages);
     } catch (error) {
       console.log(error);
       swalError();
@@ -139,7 +172,7 @@ const Penyakit = () => {
                   {penyakit?.map((item, index) => (
                     <tr key={index}>
                       <td className="px-6 py-4 whitespace-wrap text-md font-bold text-gray-800 ">
-                        {index + 1}
+                        {(currentPage - 1) * pageSize + index + 1}
                       </td>
                       <td className="px-6 py-4 whitespace-wrap text-md text-gray-800 ">
                         {item.penyakit}
@@ -168,6 +201,12 @@ const Penyakit = () => {
           </div>
         </div>
       </div>
+
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={handlePageChange}
+      />
     </>
   );
 };

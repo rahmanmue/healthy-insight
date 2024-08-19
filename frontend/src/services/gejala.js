@@ -1,8 +1,10 @@
 import axiosInstance from "./api";
 
 class GejalaService {
-  async getAll() {
-    const response = await axiosInstance.get("/gejala");
+  async getAll(page, pageSize = 0) {
+    const response = await axiosInstance.get(
+      `/gejala?page=${page}&pageSize=${pageSize}`
+    );
     return response.data;
   }
 
@@ -11,8 +13,10 @@ class GejalaService {
     return response.data;
   }
 
-  async searchGejala(data) {
-    const response = await axiosInstance.get(`/gejala/search?data=${data}`);
+  async searchGejala(data, page = 1, pageSize = 5) {
+    const response = await axiosInstance.get(
+      `/gejala/search?data=${data}&page=${page}&pageSize=${pageSize}`
+    );
     return response.data;
   }
 

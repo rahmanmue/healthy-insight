@@ -12,12 +12,17 @@ import {
 import { FaRegTrashAlt } from "react-icons/fa";
 import { MdEdit } from "react-icons/md";
 import Search from "../../components/Search/Search";
+import Pagination from "../../components/Pagination/Pagination";
 
 const gejalaService = new GejalaService();
 
 const Gejala = () => {
   // get all gejala
   const [gejala, setGejala] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
+  const [searchData, setSearchData] = useState("");
+  const pageSize = 5;
 
   // show modal
   const [open, setOpen] = useState(false);
@@ -28,10 +33,34 @@ const Gejala = () => {
     setOpen(!open);
   };
 
+  const handlePageChange = async (page) => {
+    setCurrentPage(page);
+    if (searchData !== "") {
+      const results = await gejalaService.searchGejala(
+        searchData,
+        page,
+        pageSize
+      );
+      if (results.data.length === 0) {
+        swalFail();
+        setSearchData("");
+        return;
+      }
+      setGejala(results.data);
+      setCurrentPage(results.currentPage);
+    } else {
+      const response = await gejalaService.getAll(page, pageSize);
+      setGejala(response.data);
+      setCurrentPage(response.currentPage);
+    }
+  };
+
   const getAll = async () => {
     try {
-      const data = await gejalaService.getAll();
-      setGejala(data);
+      const response = await gejalaService.getAll(1, pageSize);
+      setGejala(response.data);
+      setCurrentPage(response.currentPage);
+      setTotalPages(response.totalPages);
     } catch (error) {
       console.log(error);
     }
@@ -66,13 +95,22 @@ const Gejala = () => {
 
   const handleSearch = async (data) => {
     try {
-      const results = await gejalaService.searchGejala(data);
-      if (results.length === 0) {
+      const results = await gejalaService.searchGejala(
+        data,
+        currentPage,
+        pageSize
+      );
+      if (results.data.length === 0) {
         swalFail();
+        setSearchData("");
         return;
       }
-      setGejala(results);
+      setSearchData(data);
+      setGejala(results.data);
+      setCurrentPage(results.currentPage);
+      setTotalPages(results.totalPages);
     } catch (error) {
+      setSearchData("");
       console.log(error);
       swalError();
     }
@@ -80,6 +118,7 @@ const Gejala = () => {
 
   useEffect(() => {
     getAll();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -146,7 +185,7 @@ const Gejala = () => {
                   {gejala.map((item, index) => (
                     <tr key={index}>
                       <td className="px-6 py-4 whitespace-wrap text-sm font-bold text-gray-800 ">
-                        {index + 1}
+                        {(currentPage - 1) * pageSize + index + 1}
                       </td>
                       <td className="px-6 py-4 whitespace-wrap text-md text-gray-800 ">
                         {item.gejala}
@@ -178,6 +217,12 @@ const Gejala = () => {
           </div>
         </div>
       </div>
+
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={handlePageChange}
+      />
     </>
   );
 };

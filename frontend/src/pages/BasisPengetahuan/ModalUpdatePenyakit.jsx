@@ -38,7 +38,7 @@ const ModalUpdatePenyakit = ({ open, handleOpen, item, updateData }) => {
 
   const getAllPenyakit = async () => {
     try {
-      const data = await penyakitService.getAll();
+      const { data } = await penyakitService.getAll();
       setPenyakit(data);
     } catch (error) {
       console.log(error);

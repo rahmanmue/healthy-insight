@@ -6,16 +6,45 @@ import SolusiService from "../../services/solusi";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { MdEdit } from "react-icons/md";
 import Search from "../../components/Search/Search";
+import Pagination from "../../components/Pagination/Pagination";
 
 const solusiService = new SolusiService();
 
 const Solusi = () => {
   const [solusi, setSolusi] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
+  const [searchData, setSearchData] = useState("");
+  const pageSize = 5;
+
+  const handlePageChange = async (page) => {
+    setCurrentPage(page);
+    if (searchData !== "") {
+      const results = await solusiService.searchSolusi(
+        searchData,
+        page,
+        pageSize
+      );
+      if (results.data.length === 0) {
+        swalFail();
+        setSearchData("");
+        return;
+      }
+      setSolusi(results.data);
+      setCurrentPage(results.currentPage);
+    } else {
+      const response = await solusiService.getAll(page, pageSize);
+      setSolusi(response.data);
+      setCurrentPage(response.currentPage);
+    }
+  };
 
   const getAllSolusi = async () => {
     try {
-      const data = await solusiService.getAll();
-      setSolusi(data);
+      const response = await solusiService.getAll(1, pageSize);
+      setSolusi(response.data);
+      setCurrentPage(response.currentPage);
+      setTotalPages(response.totalPages);
     } catch (error) {
       console.log(error);
     }
@@ -30,12 +59,16 @@ const Solusi = () => {
 
   const handleSearch = async (data) => {
     try {
+      setSearchData(data);
       const results = await solusiService.searchSolusi(data);
-      if (results.length === 0) {
+      if (results.data.length === 0) {
         swalFail();
+        setSearchData("");
         return;
       }
-      setSolusi(results);
+      setSolusi(results.data);
+      setCurrentPage(results.currentPage);
+      setTotalPages(results.totalPages);
     } catch (error) {
       console.log(error);
       swalError();
@@ -101,7 +134,7 @@ const Solusi = () => {
                   {solusi?.map((item, index) => (
                     <tr key={index}>
                       <td className="px-6 py-4 whitespace-wrap text-sm font-bold text-gray-800 ">
-                        {index + 1}
+                        {(currentPage - 1) * pageSize + index + 1}
                       </td>
                       <td className="px-6 py-4 whitespace-wrap text-gray-800 ">
                         <div className="text-md font-semibold">
@@ -138,6 +171,11 @@ const Solusi = () => {
           </div>
         </div>
       </div>
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={handlePageChange}
+      />
     </>
   );
 };

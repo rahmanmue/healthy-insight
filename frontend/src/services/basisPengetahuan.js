@@ -1,8 +1,10 @@
 import axiosInstance from "./api";
 
 class BasisPengetahuanService {
-  async getAll() {
-    const response = await axiosInstance.get("/basis-pengetahuan");
+  async getAll(page = 1, pageSize = 5) {
+    const response = await axiosInstance.get(
+      `/basis-pengetahuan?page=${page}&pageSize=${pageSize}`
+    );
     return response.data;
   }
 
@@ -11,9 +13,9 @@ class BasisPengetahuanService {
     return response.data;
   }
 
-  async searchBasisPengetahuan(data) {
+  async searchBasisPengetahuan(data, page = 1, pageSize = 5) {
     const response = await axiosInstance.get(
-      `/basis-pengetahuan/search?data=${data}`
+      `/basis-pengetahuan/search?data=${data}&page=${page}&pageSize=${pageSize}`
     );
     return response.data;
   }

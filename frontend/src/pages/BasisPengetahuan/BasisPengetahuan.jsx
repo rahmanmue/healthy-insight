@@ -9,6 +9,7 @@ import { FaRegTrashAlt } from "react-icons/fa";
 import { MdEdit } from "react-icons/md";
 import ModalUpdatePenyakit from "./ModalUpdatePenyakit";
 import Search from "../../components/Search/Search";
+import Pagination from "../../components/Pagination/Pagination";
 
 const basisPengetahuanService = new BasisPengetahuanService();
 
@@ -16,16 +17,44 @@ const BasisPengetahuan = () => {
   const [data, setData] = useState([]);
   const [open, setOpen] = useState(false);
   const [itemData, setItemData] = useState({});
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
+  const [searchData, setSearchData] = useState("");
+  const pageSize = 1;
 
   const handleOpen = (item) => {
     setOpen(!open);
     setItemData(item);
   };
 
+  const handlePageChange = async (page) => {
+    setCurrentPage(page);
+    if (searchData !== "") {
+      const results = await basisPengetahuanService.searchBasisPengetahuan(
+        searchData,
+        page,
+        pageSize
+      );
+      if (results.data.length === 0) {
+        swalFail();
+        setSearchData("");
+        return;
+      }
+      setData(results.data);
+      setCurrentPage(results.currentPage);
+    } else {
+      const response = await basisPengetahuanService.getAll(page, pageSize);
+      setData(response.data);
+      setCurrentPage(response.currentPage);
+    }
+  };
+
   const getAll = async () => {
     try {
-      const data = await basisPengetahuanService.getAll();
-      setData(data);
+      const response = await basisPengetahuanService.getAll(1, pageSize);
+      setData(response.data);
+      setCurrentPage(response.currentPage);
+      setTotalPages(response.totalPages);
     } catch (error) {
       console.log(error);
     }
@@ -50,14 +79,18 @@ const BasisPengetahuan = () => {
 
   const handleSearch = async (data) => {
     try {
+      setSearchData(data);
       const results = await basisPengetahuanService.searchBasisPengetahuan(
         data
       );
-      if (results.length === 0) {
+      if (results.data.length === 0) {
         swalFail();
+        setSearchData("");
         return;
       }
-      setData(results);
+      setData(results.data);
+      setCurrentPage(results.currentPage);
+      setTotalPages(results.totalPages);
     } catch (error) {
       console.log(error);
       swalError();
@@ -183,6 +216,12 @@ const BasisPengetahuan = () => {
           </div>
         </div>
       </div>
+
+      <Pagination
+        totalPages={totalPages}
+        currentPage={currentPage}
+        onPageChange={handlePageChange}
+      />
     </>
   );
 };

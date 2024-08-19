@@ -21,7 +21,7 @@ const Konsultasi = () => {
 
   const getAll = async () => {
     try {
-      const data = await gejalaService.getAll();
+      const { data } = await gejalaService.getAll();
       setGejala(data);
     } catch (error) {
       console.log(error);

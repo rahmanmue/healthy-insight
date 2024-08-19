@@ -1,8 +1,10 @@
 import axiosInstance from "./api";
 
 class SolusiService {
-  async getAll() {
-    const response = await axiosInstance.get("/solusi");
+  async getAll(page = 1, pageSize = 5) {
+    const response = await axiosInstance.get(
+      `/solusi?page=${page}&pageSize=${pageSize}`
+    );
     return response.data;
   }
 
@@ -11,8 +13,10 @@ class SolusiService {
     return response.data;
   }
 
-  async searchSolusi(data) {
-    const response = await axiosInstance.get(`/solusi/search?data=${data}`);
+  async searchSolusi(data, page = 1, pageSize = 5) {
+    const response = await axiosInstance.get(
+      `/solusi/search?data=${data}&page=${page}&pageSize=${pageSize}`
+    );
     return response.data;
   }
 

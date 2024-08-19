@@ -26,7 +26,7 @@ const AddBasisPengetahuan = () => {
 
   const getAllGejala = async () => {
     try {
-      const data = await gejalaService.getAll();
+      const { data } = await gejalaService.getAll();
       setGejala(data);
     } catch (error) {
       console.log(error);
@@ -35,7 +35,7 @@ const AddBasisPengetahuan = () => {
 
   const getAllPenyakit = async () => {
     try {
-      const data = await penyakitService.getAll();
+      const { data } = await penyakitService.getAll();
       setPenyakit(data);
     } catch (error) {
       console.log(error);

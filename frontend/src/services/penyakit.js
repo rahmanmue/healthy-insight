@@ -1,8 +1,10 @@
 import axiosInstance from "./api";
 
 class PenyakitService {
-  async getAll() {
-    const response = await axiosInstance.get("/penyakit");
+  async getAll(page, pageSize = 0) {
+    const response = await axiosInstance.get(
+      `/penyakit?page=${page}&pageSize=${pageSize}`
+    );
     return response.data;
   }
 
@@ -11,8 +13,10 @@ class PenyakitService {
     return response.data;
   }
 
-  async searhPenyakit(data) {
-    const response = await axiosInstance.get(`/penyakit/search?data=${data}`);
+  async searchPenyakit(data, page = 1, pageSize = 5) {
+    const response = await axiosInstance.get(
+      `/penyakit/search?data=${data}&page=${page}&pageSize=${pageSize}`
+    );
     return response.data;
   }
 

@@ -5,16 +5,41 @@ import { swalDelete, swalFail, swalError } from "../../utils/Swal";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { LuBookKey } from "react-icons/lu";
 import Search from "../../components/Search/Search";
+import Pagination from "../../components/Pagination/Pagination";
 
 const caseService = new CaseService();
 
 const Kasus = () => {
   const [data, setData] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
+  const [searchData, setSearchData] = useState("");
+  const pageSize = 1;
+
+  const handlePageChange = async (page) => {
+    setCurrentPage(page);
+    if (searchData !== "") {
+      const results = await caseService.searchCase(searchData, page, pageSize);
+      if (results.data.length === 0) {
+        swalFail();
+        setSearchData("");
+        return;
+      }
+      setData(results.data);
+      setCurrentPage(results.currentPage);
+    } else {
+      const response = await caseService.getAll(page, pageSize);
+      setData(response.data);
+      setCurrentPage(response.currentPage);
+    }
+  };
 
   const getAll = async () => {
     try {
-      const data = await caseService.getAll();
-      setData(data);
+      const response = await caseService.getAll(1, pageSize);
+      setData(response.data);
+      setCurrentPage(response.currentPage);
+      setTotalPages(response.totalPages);
     } catch (error) {
       console.log(error);
     }
@@ -29,12 +54,16 @@ const Kasus = () => {
 
   const handleSearch = async (name) => {
     try {
+      setSearchData(name);
       const results = await caseService.searchCase(name);
-      if (results.length === 0) {
+      if (results.data.length === 0) {
         swalFail();
+        setSearchData("");
         return;
       }
-      setData(results);
+      setData(results.data);
+      setCurrentPage(results.currentPage);
+      setTotalPages(results.totalPages);
     } catch (error) {
       console.log(error);
       swalError();
@@ -100,7 +129,7 @@ const Kasus = () => {
                   {data?.map((item, itemIndex) => (
                     <tr key={itemIndex}>
                       <td className="px-6 py-4 font-bold whitespace-nowrap text-md text-center text-gray-800">
-                        {itemIndex + 1}
+                        {(currentPage - 1) * pageSize + itemIndex + 1}
                       </td>
                       <td className="px-6 py-4 font-medium whitespace-nowrap text-md text-center text-gray-800">
                         {item.name}
@@ -137,6 +166,11 @@ const Kasus = () => {
           </div>
         </div>
       </div>
+      <Pagination
+        totalPages={totalPages}
+        currentPage={currentPage}
+        onPageChange={handlePageChange}
+      />
     </>
   );
 };
