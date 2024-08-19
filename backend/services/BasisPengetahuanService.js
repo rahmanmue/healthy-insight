@@ -1,52 +1,84 @@
-import { Op } from "sequelize";
+import { Sequelize, Op } from "sequelize";
 import BasisPengetahuan from "../models/BasisPengetahuanModel.js";
 import Gejala from "../models/GejalaModel.js";
 import Penyakit from "../models/PenyakitModel.js";
+import db from "../config/db.js";
 
-export const getAllBasisPengetahuan = async () => {
-  const basisPengetahuan = await BasisPengetahuan.findAll({
-    attributes: ["id", "kode_basis_pengetahuan", "id_penyakit", "id_gejala"],
-    include: [
-      {
-        model: Penyakit,
-        attributes: ["penyakit"],
-      },
-      {
-        model: Gejala,
-        attributes: ["id", "gejala"],
-      },
-    ],
-  });
+export const getAllBasisPengetahuan = async (page = 1, pageSize = 10) => {
+  try {
+    const offset = (page - 1) * pageSize;
+    const limit = pageSize;
 
-  // Mengelompokkan data berdasarkan kode_basis_pengetahuan
-  const groupedData = basisPengetahuan.reduce((acc, item) => {
-    // Jika kode_basis_pengetahuan belum ada di accumulator, tambahkan
-    if (!acc[item.kode_basis_pengetahuan]) {
-      acc[item.kode_basis_pengetahuan] = {
-        kode_basis_pengetahuan: item.kode_basis_pengetahuan,
-        penyakit: item.penyakit.penyakit,
-        gejala: [],
-      };
-    }
-
-    // Tambahkan gejala ke dalam array gejala untuk kode_basis_pengetahuan yang sesuai
-    acc[item.kode_basis_pengetahuan].gejala.push({
-      id: item.gejala.id,
-      id_gejala: item.id_gejala,
-      gejala: item.gejala.gejala,
+    const subsetKodeBasisPengetahuan = await BasisPengetahuan.findAll({
+      attributes: ["kode_basis_pengetahuan"],
+      group: ["kode_basis_pengetahuan"],
+      offset: offset,
+      limit: limit,
+      raw: true, // mendapatkan hasil sbg objek biasa
     });
 
-    return acc;
-  }, {});
+    const kodeBasisPengetahuanList = subsetKodeBasisPengetahuan.map(
+      (item) => item.kode_basis_pengetahuan
+    );
 
-  // Mengubah objek groupedData menjadi array
-  const formattedData = Object.values(groupedData);
+    const basisPengetahuan = await BasisPengetahuan.findAll({
+      attributes: ["id", "kode_basis_pengetahuan", "id_penyakit", "id_gejala"],
+      include: [
+        {
+          model: Penyakit,
+          attributes: ["penyakit"],
+        },
+        {
+          model: Gejala,
+          attributes: ["id", "gejala"],
+        },
+      ],
+      where: {
+        kode_basis_pengetahuan: kodeBasisPengetahuanList,
+      },
+    });
 
-  // Return response
-  return {
-    status: 200,
-    data: formattedData,
-  };
+    // Mengelompokkan data berdasarkan kode_basis_pengetahuan
+    const groupedData = basisPengetahuan.reduce((acc, item) => {
+      // Jika kode_basis_pengetahuan belum ada di accumulator, tambahkan
+      if (!acc[item.kode_basis_pengetahuan]) {
+        acc[item.kode_basis_pengetahuan] = {
+          kode_basis_pengetahuan: item.kode_basis_pengetahuan,
+          penyakit: item.penyakit.penyakit,
+          gejala: [],
+        };
+      }
+
+      // Tambahkan gejala ke dalam array gejala untuk kode_basis_pengetahuan yang sesuai
+      acc[item.kode_basis_pengetahuan].gejala.push({
+        id: item.gejala.id,
+        id_gejala: item.id_gejala,
+        gejala: item.gejala.gejala,
+      });
+
+      return acc;
+    }, {});
+
+    // Mengubah objek groupedData menjadi array
+    const formattedData = Object.values(groupedData);
+
+    const totalItems = await BasisPengetahuan.count({
+      distinct: true,
+      col: "kode_basis_pengetahuan",
+    });
+
+    // Return response
+    return {
+      status: 200,
+      data: formattedData,
+      currentPage: parseInt(page),
+      pageSize: parseInt(pageSize),
+      totalItems: totalItems,
+      totalPages: Math.ceil(totalItems / parseInt(pageSize)),
+    };
+  } catch (error) {
+    throw new Error(error);
+  }
 };
 
 export const getBasisPengetahuanByKode = async (kode) => {
@@ -87,55 +119,110 @@ export const getBasisPengetahuanByKode = async (kode) => {
   };
 };
 
-export const getBasisPengetahuanByData = async (data) => {
-  const basisPengetahuan = await BasisPengetahuan.findAll({
-    attributes: ["id", "kode_basis_pengetahuan", "id_penyakit", "id_gejala"],
-    include: [
-      {
-        model: Penyakit,
-        attributes: ["penyakit"],
-      },
-      {
-        model: Gejala,
-        attributes: ["id", "gejala"],
-      },
-    ],
-    where: {
-      [Op.or]: [
-        { kode_basis_pengetahuan: { [Op.like]: `%${data}%` } },
-        { "$penyakit.penyakit$": { [Op.like]: `%${data}%` } },
-        { "$gejala.gejala$": { [Op.like]: `%${data}%` } },
+export const getBasisPengetahuanByData = async (
+  data,
+  page = 1,
+  pageSize = 10
+) => {
+  try {
+    const offset = (page - 1) * pageSize;
+    const limit = pageSize;
+
+    const uniqueKodeBasisPengetahuan = await BasisPengetahuan.findAll({
+      attributes: [
+        db.fn("distinct", db.col("kode_basis_pengetahuan")),
+        "kode_basis_pengetahuan",
       ],
-    },
-  });
-
-  // Mengelompokkan data berdasarkan kode_basis_pengetahuan
-  const groupedData = basisPengetahuan.reduce((acc, item) => {
-    // Jika kode_basis_pengetahuan belum ada di accumulator, tambahkan
-    if (!acc[item.kode_basis_pengetahuan]) {
-      acc[item.kode_basis_pengetahuan] = {
-        kode_basis_pengetahuan: item.kode_basis_pengetahuan,
-        penyakit: item.penyakit.penyakit,
-        gejala: [],
-      };
-    }
-
-    // Tambahkan gejala ke dalam array gejala untuk kode_basis_pengetahuan yang sesuai
-    acc[item.kode_basis_pengetahuan].gejala.push({
-      id: item.gejala.id,
-      id_gejala: item.id_gejala,
-      gejala: item.gejala.gejala,
+      where: {
+        [Op.or]: [
+          { kode_basis_pengetahuan: { [Op.iLike]: `%${data}%` } },
+          Sequelize.literal(
+            `EXISTS (SELECT 1 FROM penyakit WHERE penyakit.id = basis_pengetahuan.id_penyakit AND penyakit.penyakit ILIKE '%${data}%')`
+          ),
+          Sequelize.literal(
+            `EXISTS (SELECT 1 FROM gejala WHERE gejala.id = basis_pengetahuan.id_gejala AND gejala.gejala ILIKE '%${data}%')`
+          ),
+        ],
+      },
+      offset: offset,
+      limit: limit,
+      raw: true,
     });
 
-    return acc;
-  }, {});
+    const kodeBasisPengetahuanList = uniqueKodeBasisPengetahuan.map(
+      (item) => item.kode_basis_pengetahuan
+    );
 
-  // Mengubah objek groupedData menjadi array
-  const formattedData = Object.values(groupedData);
-  return {
-    status: 200,
-    data: formattedData,
-  };
+    const basisPengetahuan = await BasisPengetahuan.findAll({
+      attributes: ["id", "kode_basis_pengetahuan", "id_penyakit", "id_gejala"],
+      include: [
+        {
+          model: Penyakit,
+          attributes: ["penyakit"],
+        },
+        {
+          model: Gejala,
+          attributes: ["id", "gejala"],
+        },
+      ],
+
+      where: {
+        kode_basis_pengetahuan: {
+          [Op.in]: kodeBasisPengetahuanList,
+        },
+      },
+    });
+
+    const totalItems = await BasisPengetahuan.count({
+      distinct: true,
+      col: "kode_basis_pengetahuan",
+      where: {
+        [Op.or]: [
+          { kode_basis_pengetahuan: { [Op.iLike]: `%${data}%` } },
+          Sequelize.literal(
+            `EXISTS (SELECT 1 FROM penyakit WHERE penyakit.id = basis_pengetahuan.id_penyakit AND penyakit.penyakit ILIKE '%${data}%')`
+          ),
+          Sequelize.literal(
+            `EXISTS (SELECT 1 FROM gejala WHERE gejala.id = basis_pengetahuan.id_gejala AND gejala.gejala ILIKE '%${data}%')`
+          ),
+        ],
+      },
+    });
+
+    // Mengelompokkan data berdasarkan kode_basis_pengetahuan
+    const groupedData = basisPengetahuan.reduce((acc, item) => {
+      // Jika kode_basis_pengetahuan belum ada di accumulator, tambahkan
+      if (!acc[item.kode_basis_pengetahuan]) {
+        acc[item.kode_basis_pengetahuan] = {
+          kode_basis_pengetahuan: item.kode_basis_pengetahuan,
+          penyakit: item.penyakit.penyakit,
+          gejala: [],
+        };
+      }
+
+      // Tambahkan gejala ke dalam array gejala untuk kode_basis_pengetahuan yang sesuai
+      acc[item.kode_basis_pengetahuan].gejala.push({
+        id: item.gejala.id,
+        id_gejala: item.id_gejala,
+        gejala: item.gejala.gejala,
+      });
+
+      return acc;
+    }, {});
+
+    // Mengubah objek groupedData menjadi array
+    const formattedData = Object.values(groupedData);
+    return {
+      status: 200,
+      data: formattedData,
+      currentPage: parseInt(page),
+      pageSize: parseInt(pageSize),
+      totalItems: totalItems,
+      totalPages: Math.ceil(totalItems / parseInt(pageSize)),
+    };
+  } catch (error) {
+    throw new Error(error);
+  }
 };
 
 export const checkBasisPengetahuan = async (kode_bp) => {

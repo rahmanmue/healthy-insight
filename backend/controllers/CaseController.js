@@ -8,8 +8,10 @@ import {
 
 export const getAllCases = async (req, res) => {
   try {
-    const cases = await getAllCase();
-    res.status(cases.status).json(cases.data);
+    const page = req.query.page || 1;
+    const pageSize = req.query.pageSize || 10;
+    const cases = await getAllCase(page, pageSize);
+    res.status(cases.status).json(cases);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -26,8 +28,11 @@ export const getCaseByKodeCaseController = async (req, res) => {
 
 export const searchCase = async (req, res) => {
   try {
-    const cases = await getCaseByData(req.query.name);
-    res.status(cases.status).json(cases.data);
+    const data = req.query.name;
+    const page = req.query.page || 1;
+    const pageSize = req.query.pageSize || 10;
+    const cases = await getCaseByData(data, page, pageSize);
+    res.status(cases.status).json(cases);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

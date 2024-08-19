@@ -9,8 +9,10 @@ import {
 
 export const getPenyakit = async (req, res) => {
   try {
-    const penyakit = await getAllPenyakit();
-    res.status(penyakit.status).json(penyakit.data);
+    const page = req.query.page || 1;
+    const pageSize = req.query.pageSize || 10;
+    const penyakit = await getAllPenyakit(page, pageSize);
+    res.status(penyakit.status).json(penyakit);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -18,8 +20,11 @@ export const getPenyakit = async (req, res) => {
 
 export const searchPenyakit = async (req, res) => {
   try {
-    const penyakit = await getPenyakitByData(req.query.data);
-    res.status(penyakit.status).json(penyakit.data);
+    const data = req.query.data;
+    const page = req.query.page || 1;
+    const pageSize = req.query.pageSize || 10;
+    const penyakit = await getPenyakitByData(data, page, pageSize);
+    res.status(penyakit.status).json(penyakit);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

@@ -9,8 +9,10 @@ import {
 
 export const getAllSolusiController = async (req, res) => {
   try {
-    const solusi = await getAllSolusi();
-    res.status(solusi.status).json(solusi.data);
+    const page = req.query.page || 1;
+    const pageSize = req.query.pageSize || 10;
+    const solusi = await getAllSolusi(page, pageSize);
+    res.status(solusi.status).json(solusi);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -27,8 +29,11 @@ export const getSolusiByIdController = async (req, res) => {
 
 export const searchSolusi = async (req, res) => {
   try {
-    const solusi = await getSolusiByData(req.query.data);
-    res.status(solusi.status).json(solusi.data);
+    const data = req.query.data;
+    const page = req.query.page || 1;
+    const pageSize = req.query.pageSize || 10;
+    const solusi = await getSolusiByData(data, page, pageSize);
+    res.status(solusi.status).json(solusi);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

@@ -9,8 +9,10 @@ import {
 
 export const getGejala = async (req, res) => {
   try {
-    const gejala = await getAllGejala();
-    res.status(gejala.status).json(gejala.data);
+    const page = req.query.page || 1;
+    const pageSize = req.query.pageSize || 10;
+    const gejala = await getAllGejala(page, pageSize);
+    res.status(gejala.status).json(gejala);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -27,8 +29,11 @@ export const getGejalaByIdController = async (req, res) => {
 
 export const searchGejala = async (req, res) => {
   try {
-    const gejala = await getGejalaByData(req.query.data);
-    res.status(gejala.status).json(gejala.data);
+    const data = req.query.data;
+    const page = req.query.page || 1;
+    const pageSize = req.query.pageSize || 10;
+    const gejala = await getGejalaByData(data, page, pageSize);
+    res.status(gejala.status).json(gejala);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

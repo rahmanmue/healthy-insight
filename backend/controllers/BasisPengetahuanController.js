@@ -12,8 +12,10 @@ import {
 
 export const getAllBasisPengetahuanController = async (req, res) => {
   try {
-    const basisPengetahuan = await getAllBasisPengetahuan();
-    res.status(basisPengetahuan.status).json(basisPengetahuan.data);
+    const page = req.query.page || 1;
+    const pageSize = req.query.pageSize || 10;
+    const basisPengetahuan = await getAllBasisPengetahuan(page, pageSize);
+    res.status(basisPengetahuan.status).json(basisPengetahuan);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -30,8 +32,15 @@ export const getAllBasisPengetahuanByKode = async (req, res) => {
 
 export const searchBasisPengetahun = async (req, res) => {
   try {
-    const basisPengetahuan = await getBasisPengetahuanByData(req.query.data);
-    res.status(basisPengetahuan.status).json(basisPengetahuan.data);
+    const data = req.query.data;
+    const page = req.query.page || 1;
+    const pageSize = req.query.pageSize || 10;
+    const basisPengetahuan = await getBasisPengetahuanByData(
+      data,
+      page,
+      pageSize
+    );
+    res.status(basisPengetahuan.status).json(basisPengetahuan);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
