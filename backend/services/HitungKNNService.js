@@ -20,8 +20,12 @@ const getInputData = async (data) => {
 
 const getBasisPengetahuanPenyakit = async () => {
   const penyakit = await BasisPengetahuan.findAll({
-    attributes: ["kode_basis_pengetahuan", "id_penyakit"],
-    group: ["kode_basis_pengetahuan"],
+    attributes: ["kode_basis_pengetahuan"],
+    group: [
+      "kode_basis_pengetahuan",
+      "penyakit.id", // Sertakan kolom yang di-include
+      "penyakit.penyakit", // Sertakan kolom yang di-include
+    ],
     include: [
       {
         model: Penyakit,
@@ -36,7 +40,7 @@ const getBasisPengetahuanGejalaByPenyakit = async (data) => {
   const gejalaPenyakit = await BasisPengetahuan.findAll({
     attributes: ["id_gejala"],
     where: {
-      id_penyakit: data.id_penyakit,
+      id_penyakit: data.penyakit.id,
     },
     include: [
       {
@@ -56,6 +60,8 @@ export const getHasilPerhitunganKNN = async (dataGejala, dataInput = {}) => {
 
     // 1. mencari basis pengetahuan penyakit
     const basis_pengetahuan = await getBasisPengetahuanPenyakit();
+
+    // return basis_pengetahuan;
 
     const kode_case = `CS-${crypto
       .randomBytes(2)
