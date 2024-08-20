@@ -157,7 +157,7 @@ const AddBasisPengetahuan = () => {
             ))}
           </div>
           <button
-            className="font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-4 bg-blue-500 hover:bg-blue-700 text-white w-full"
+            className="font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-4 bg-green-500 hover:bg-green-600 text-white w-full"
             type="submit"
           >
             Tambah

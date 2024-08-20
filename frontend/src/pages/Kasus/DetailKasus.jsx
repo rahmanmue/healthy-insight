@@ -132,22 +132,22 @@ const DetailKasus = () => {
                 <tbody className="divide-y divide-gray-200 ">
                   {cases?.map((item, index) => (
                     <tr key={index}>
-                      <td className="px-6 py-4 capitalize font-bold whitespace-wrap text-sm text-gray-800 ">
+                      <td className="px-6 py-4 capitalize font-bold whitespace-wrap text-sm text-gray-800 dark:text-white ">
                         {item.penyakit.penyakit}
                       </td>
-                      <td className="px-6 py-4 text-center whitespace-wrap text-sm font-medium text-gray-800 ">
+                      <td className="px-6 py-4 text-center whitespace-wrap text-sm font-medium text-gray-800 dark:text-white ">
                         {item.kode_basis_pengetahuan}
                       </td>
-                      <td className="px-6 py-4 whitespace-wrap text-center text-sm text-gray-800 ">
+                      <td className="px-6 py-4 whitespace-wrap text-center text-sm text-gray-800 dark:text-white ">
                         {item.total_gejala}
                       </td>
-                      <td className="px-6 py-4 whitespace-wrap text-center text-sm text-gray-800 ">
+                      <td className="px-6 py-4 whitespace-wrap text-center text-sm text-gray-800 dark:text-white ">
                         {item.match_count}
                       </td>
-                      <td className="px-6 py-4 whitespace-wrap text-center text-sm text-gray-800 ">
+                      <td className="px-6 py-4 whitespace-wrap text-center text-sm text-gray-800 dark:text-white ">
                         {`${item.total_similarity_gejala} / ${item.total_bobot}`}
                       </td>
-                      <td className="px-6 py-4 whitespace-wrap text-center text-sm text-gray-800 ">
+                      <td className="px-6 py-4 whitespace-wrap text-center text-sm text-gray-800 dark:text-white ">
                         {`${parseInt(item.nilai_diagnosis * 100)} %`}
                       </td>
                     </tr>
@@ -170,7 +170,7 @@ const DetailKasus = () => {
             {` ${parseInt(cases[0]?.nilai_diagnosis * 100)}%`}.
           </span>
         </p>
-        <div className="my-4 ps-4 pe-5 bg-slate-200 py-3 rounded-sm font-medium text-justify">
+        <div className="my-4 ps-4 pe-5 bg-slate-200 dark:bg-slate-600 dark:text-white py-3 rounded-sm font-medium text-justify">
           {cases[0]?.solusi}
         </div>
       </div>

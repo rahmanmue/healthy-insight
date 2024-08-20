@@ -52,12 +52,12 @@ const ModalUpdatePenyakit = ({ open, handleOpen, item, updateData }) => {
   return (
     <Modal open={open} handleOpen={handleOpen}>
       <ToastContainer />
-      <div className="bg-white px-8 pb-4 pt-5 sm:p-6 sm:pb-4">
+      <div className="bg-white dark:bg-slate-800 dark:text-white  px-8 pb-4 pt-5 sm:p-6 sm:pb-4">
         <h1 className="text-3xl font-bold">Ubah Penyakit</h1>
         <div>
           <Select
             name="id_penyakit"
-            className="py-3 ps-4 mt-2 pe-5 block w-full border-2 border-gray-200 bg-white rounded-lg text-md font-medium focus:border-blue-500 focus:border-1 focus:ring-blue-500 focus:outline-none"
+            className="py-3 ps-4 mt-2 pe-5 block w-full border-2 dark:bg-slate-700 border-gray-200 bg-white rounded-lg text-md font-medium focus:border-blue-500 focus:border-1 focus:ring-blue-500 focus:outline-none"
             onChange={handleInput}
             required
           >
@@ -76,7 +76,7 @@ const ModalUpdatePenyakit = ({ open, handleOpen, item, updateData }) => {
           </Select>
         </div>
       </div>
-      <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+      <div className="bg-gray-50 dark:bg-slate-800 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
         <button
           type="button"
           onClick={() => handleSubmit()}

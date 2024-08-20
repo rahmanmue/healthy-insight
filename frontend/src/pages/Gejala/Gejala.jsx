@@ -126,7 +126,7 @@ const Gejala = () => {
       <div className="flex justify-between mb-5">
         <h1 className="text-3xl font-bold">Gejala</h1>
         <button
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg uppercase flex items-center gap-1 focus:outline-none focus:shadow-outline"
+          className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg uppercase flex items-center gap-1 focus:outline-none focus:shadow-outline"
           type="button"
           onClick={() => handleOpen()}
         >
@@ -184,13 +184,13 @@ const Gejala = () => {
                 <tbody className="divide-y divide-gray-200 ">
                   {gejala.map((item, index) => (
                     <tr key={index}>
-                      <td className="px-6 py-4 whitespace-wrap text-sm font-bold text-gray-800 ">
+                      <td className="px-6 py-4 whitespace-wrap text-sm font-bold text-gray-800 dark:text-white">
                         {(currentPage - 1) * pageSize + index + 1}
                       </td>
-                      <td className="px-6 py-4 whitespace-wrap text-md text-gray-800 ">
+                      <td className="px-6 py-4 whitespace-wrap text-md text-gray-800 dark:text-white">
                         {item.gejala}
                       </td>
-                      <td className="px-6 py-4 whitespace-wrap text-center text-md text-gray-800 ">
+                      <td className="px-6 py-4 whitespace-wrap text-center text-md text-gray-800 dark:text-white">
                         {item.nilai_bobot}
                       </td>
                       <td className="px-6 py-4 whitespace-wrap  text-sm font-bold flex justify-center gap-2">

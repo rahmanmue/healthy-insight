@@ -84,7 +84,7 @@ const Solusi = () => {
       <div className="flex justify-between mb-5">
         <h1 className="text-3xl font-bold">Solusi</h1>
         <Link
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 flex items-center gap-1 rounded-lg uppercase focus:outline-none focus:shadow-outline"
+          className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 flex items-center gap-1 rounded-lg uppercase focus:outline-none focus:shadow-outline"
           to={`/admin/solusi/add`}
         >
           <IoMdAdd className="inline text-xl" /> Solusi
@@ -133,10 +133,10 @@ const Solusi = () => {
                 <tbody className="divide-y divide-gray-200 ">
                   {solusi?.map((item, index) => (
                     <tr key={index}>
-                      <td className="px-6 py-4 whitespace-wrap text-sm font-bold text-gray-800 ">
+                      <td className="px-6 py-4 whitespace-wrap text-sm font-bold text-gray-800 dark:text-white">
                         {(currentPage - 1) * pageSize + index + 1}
                       </td>
-                      <td className="px-6 py-4 whitespace-wrap text-gray-800 ">
+                      <td className="px-6 py-4 whitespace-wrap text-gray-800 dark:text-white">
                         <div className="text-md font-semibold">
                           {item.penyakit}
                         </div>
@@ -144,7 +144,7 @@ const Solusi = () => {
                           {`(${item.persentase_awal}-${item.persentase_akhir})%`}
                         </span>
                       </td>
-                      <td className="px-6 py-4 whitespace-wrap text-md capitalize text-gray-800 ">
+                      <td className="px-6 py-4 whitespace-wrap text-md capitalize text-gray-800 dark:text-white">
                         {item.solusi}
                       </td>
                       <td className="px-6 py-4 whitespace-wrap  text-sm font-bold">

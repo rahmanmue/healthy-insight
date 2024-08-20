@@ -119,7 +119,7 @@ const Penyakit = () => {
       <div className="flex justify-between mb-5">
         <h1 className="text-3xl font-bold">Penyakit</h1>
         <button
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 flex items-center gap-1 rounded-lg uppercase focus:outline-none focus:shadow-outline"
+          className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 flex items-center gap-1 rounded-lg uppercase focus:outline-none focus:shadow-outline"
           type="button"
           onClick={() => handleOpen()}
         >
@@ -168,13 +168,13 @@ const Penyakit = () => {
                     </th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-200 ">
+                <tbody className="divide-y divide-gray-200">
                   {penyakit?.map((item, index) => (
                     <tr key={index}>
-                      <td className="px-6 py-4 whitespace-wrap text-md font-bold text-gray-800 ">
+                      <td className="px-6 py-4 whitespace-wrap text-md font-bold text-gray-800 dark:text-white ">
                         {(currentPage - 1) * pageSize + index + 1}
                       </td>
-                      <td className="px-6 py-4 whitespace-wrap text-md text-gray-800 ">
+                      <td className="px-6 py-4 whitespace-wrap text-md text-gray-800 dark:text-white">
                         {item.penyakit}
                       </td>
                       <td className="px-6 py-4 whitespace-wrap  text-sm font-bold flex justify-end gap-2">

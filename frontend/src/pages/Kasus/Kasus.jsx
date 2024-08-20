@@ -128,24 +128,24 @@ const Kasus = () => {
                 <tbody className="divide-y divide-gray-200">
                   {data?.map((item, itemIndex) => (
                     <tr key={itemIndex}>
-                      <td className="px-6 py-4 font-bold whitespace-nowrap text-md text-center text-gray-800">
+                      <td className="px-6 py-4 font-bold whitespace-nowrap text-md text-center text-gray-800 dark:text-white">
                         {(currentPage - 1) * pageSize + itemIndex + 1}
                       </td>
-                      <td className="px-6 py-4 font-medium whitespace-nowrap text-md text-center text-gray-800">
+                      <td className="px-6 py-4 font-medium whitespace-nowrap text-md text-center text-gray-800 dark:text-white">
                         {item.name}
                       </td>
-                      <td className="px-6 py-4 font-medium whitespace-nowrap text-md text-center text-gray-800">
+                      <td className="px-6 py-4 font-medium whitespace-nowrap text-md text-center text-gray-800 dark:text-white">
                         {item.umur} Tahun
                       </td>
-                      <td className="px-6 py-4 font-medium whitespace-nowrap text-md text-center text-gray-800">
+                      <td className="px-6 py-4 font-medium whitespace-nowrap text-md text-center text-gray-800 dark:text-white">
                         {item.jenis_kelamin}
                       </td>
 
-                      <td className="px-6 py-4  whitespace-wrap text-sm text-gray-800 text-end">
+                      <td className="px-6 py-4  whitespace-wrap text-sm text-gray-800 dark:text-white text-end">
                         <div className="flex justify-end gap-2">
                           <Link
                             to={`/kasus/hasil/${item.kode_case}`}
-                            className="inline-flex items-center justify-center gap-x-2 text-md font-bold rounded-lg border border-transparent bg-cyan-500 text-white px-2 py-2 hover:bg-cyan-600 focus:outline-none"
+                            className="inline-flex items-center justify-center gap-x-2 text-md font-bold rounded-lg border border-transparent bg-green-500 text-white px-2 py-2 hover:bg-green-600 focus:outline-none"
                           >
                             <LuBookKey className="text-lg" />
                             DETAIL PERHITUNGAN

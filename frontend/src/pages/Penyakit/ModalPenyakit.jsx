@@ -56,7 +56,7 @@ const ModalPenyakit = ({ open, handleOpen, item, addData, updateData }) => {
   return (
     <Modal open={open} handleOpen={handleOpen}>
       <ToastContainer />
-      <div className="bg-white px-8 pb-4 pt-5 sm:p-6 sm:pb-4">
+      <div className="bg-white dark:bg-slate-800 dark:text-white px-8 pb-4 pt-5 sm:p-6 sm:pb-4">
         <h1 className="text-3xl font-bold mb-2">{title}</h1>
         <div className="flex flex-col">
           <Input
@@ -68,13 +68,13 @@ const ModalPenyakit = ({ open, handleOpen, item, addData, updateData }) => {
           />
         </div>
       </div>
-      <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+      <div className="bg-gray-50 dark:bg-slate-800 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
         <button
           type="button"
           onClick={() => handleSubmit()}
           className={`inline-flex w-full justify-center rounded-md  px-3 py-2 text-sm font-semibold text-white shadow-sm  sm:ml-3 sm:w-auto ${
             title === "Tambah Penyakit"
-              ? "bg-blue-600 hover:bg-blue-500"
+              ? "bg-green-600 hover:bg-green-500"
               : "bg-yellow-500 hover:bg-yellow-600"
           }`}
         >

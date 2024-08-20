@@ -63,12 +63,12 @@ const Konsultasi = () => {
 
       let umur = parseInt(data.umur);
 
-      if (umur < 0 && umur > 5) {
+      if (umur < 0 && umur > 100) {
         console.log(umur);
         Swal.fire({
           icon: "warning",
           title: "Oops...",
-          text: "Umur harus diantara 0 - 5 tahun!",
+          text: "Umur harus diantara 0 - 100 tahun!",
         });
         return;
       }
@@ -126,7 +126,7 @@ const Konsultasi = () => {
         <div className="flex items-center gap-10">
           <div className="w-1/2">
             <Input
-              label="Umur (0-5 Tahun)"
+              label="Umur"
               name="umur"
               type="number"
               placeholder="Masukan Umur"
@@ -135,7 +135,7 @@ const Konsultasi = () => {
             />
           </div>
           <div>
-            <label className="block text-md font-semibold leading-6 text-gray-900 mb-2  ">
+            <label className="block text-md font-semibold leading-6 text-gray-900 dark:text-white mb-2  ">
               Jenis Kelamin
             </label>
             <div className="flex items-start gap-4">
@@ -149,7 +149,7 @@ const Konsultasi = () => {
                   onChange={handleInput}
                 />
                 <label
-                  className="block text-md font-semibold leading-6 text-gray-900 mb-2"
+                  className="block text-md font-semibold leading-6 text-gray-900 dark:text-white mb-2"
                   htmlFor="laki"
                 >
                   Laki-Laki
@@ -165,7 +165,7 @@ const Konsultasi = () => {
                   onChange={handleInput}
                 />
                 <label
-                  className="block text-md font-semibold leading-6 text-gray-900 mb-2"
+                  className="block text-md font-semibold leading-6 text-gray-900 dark:text-white mb-2"
                   htmlFor="perempuan"
                 >
                   Perempuan
@@ -178,7 +178,7 @@ const Konsultasi = () => {
         {/* end */}
 
         <div className="mt-3">
-          <label className="block text-md font-semibold leading-6 text-gray-900 mb-2  ">
+          <label className="block text-md font-semibold leading-6 text-gray-900 mb-2 dark:text-white ">
             Pilih Gejala
           </label>
           <hr className="mt-2 mb-3" />
@@ -192,7 +192,7 @@ const Konsultasi = () => {
                 onChange={handleCheckboxChange}
               />
               <label
-                className="block text-md font-semibold leading-6 text-gray-900 my-2"
+                className="block text-md font-semibold leading-6 text-gray-900 dark:text-white my-2"
                 htmlFor={item.id}
               >
                 {item.gejala}
@@ -202,7 +202,7 @@ const Konsultasi = () => {
         </div>
 
         <button
-          className="font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-4 bg-cyan-500 hover:bg-cyan-700 text-white w-full"
+          className="font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-4 bg-green-500 hover:bg-green-700 text-white w-full"
           type="submit"
         >
           Proses

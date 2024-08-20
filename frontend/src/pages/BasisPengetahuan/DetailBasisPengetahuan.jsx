@@ -93,7 +93,7 @@ const DetailBasisPengetahuan = () => {
         </h1>
 
         <button
-          className="inline-flex w-full justify-center items-center rounded-lg uppercase bg-blue-600 px-5 py-2 text-md font-bold text-white shadow-sm hover:bg-blue-500 sm:mr-2 sm:w-auto"
+          className="inline-flex w-full justify-center items-center rounded-lg uppercase bg-green-400 px-5 py-2 text-md font-bold text-white shadow-sm hover:bg-green-500 sm:mr-2 sm:w-auto"
           onClick={() => handleOpen()}
         >
           <IoMdAdd className="mr-2" /> Gejala
@@ -139,10 +139,10 @@ const DetailBasisPengetahuan = () => {
                 <tbody className="divide-y divide-gray-200 ">
                   {data?.gejala?.map((item, index) => (
                     <tr key={index}>
-                      <td className="px-6 py-4 whitespace-wrap text-md font-bold text-gray-800 ">
+                      <td className="px-6 py-4 whitespace-wrap text-md font-bold text-gray-800 dark:text-white ">
                         {index + 1}
                       </td>
-                      <td className="px-6 py-4 whitespace-wrap text-md text-gray-800 ">
+                      <td className="px-6 py-4 whitespace-wrap text-md text-gray-800 dark:text-white ">
                         {item.gejala}
                       </td>
 

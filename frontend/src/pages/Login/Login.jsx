@@ -9,7 +9,7 @@ import notify from "../../utils/notify";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import Img4 from "../../assets/image/img-4.svg";
+import Img2 from "../../assets/image/img-2.svg";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -55,6 +55,7 @@ const Login = () => {
     <div className="h-full">
       <ToastContainer />
       <div className="flex items-center gap-5">
+        <img src={Img2} alt="img-4" className="w-1/2" />
         <form onSubmit={(e) => handleSubmit(e)} className="w-1/2">
           <h1 className="text-3xl font-bold my-2">Login Administrator</h1>
           <Input
@@ -75,13 +76,12 @@ const Login = () => {
             onChange={(e) => handleOnChange(e)}
           />
           <button
-            className="font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-2 bg-blue-500 hover:bg-blue-700 text-white w-full"
+            className="font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-2 bg-green-500 hover:bg-green-700 text-white w-full"
             type="submit"
           >
             LOGIN
           </button>
         </form>
-        <img src={Img4} alt="img-4" className="w-1/2" />
       </div>
     </div>
   );

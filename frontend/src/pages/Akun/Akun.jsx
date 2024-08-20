@@ -21,7 +21,6 @@ const Akun = () => {
 
   const getUserById = async (id) => {
     const response = await userService.getUserById(id);
-    console.log(response);
     setData({
       ...data,
       id: response.id,
@@ -114,7 +113,7 @@ const Akun = () => {
           onChange={handleOnChange}
         />
         <button
-          className="font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-2 bg-blue-500 hover:bg-blue-700 text-white w-full"
+          className="font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-2 bg-green-500 hover:bg-green-700 text-white w-full"
           type="submit"
         >
           SIMPAN

@@ -24,7 +24,7 @@ const AddSolusi = () => {
 
   const getAllPenyakit = async () => {
     try {
-      const data = await penyakitService.getAll();
+      const { data } = await penyakitService.getAll();
       setPenyakit(data);
     } catch (error) {
       console.log(error);
@@ -78,14 +78,14 @@ const AddSolusi = () => {
         <form onSubmit={handleSubmit}>
           <div>
             <label
-              className="block text-md font-semibold leading-6 text-gray-900 my-2"
+              className="block text-md font-semibold leading-6 text-gray-900 dark:text-white my-2"
               htmlFor="penyakit"
             >
               Penyakit
             </label>
             <Select
               name="id_penyakit"
-              className="py-3 ps-4 pe-5 block w-full border-2 border-gray-200 bg-white rounded-lg text-md font-medium focus:border-blue-500 focus:border-1 focus:ring-blue-500 focus:outline-none"
+              className="py-3 ps-4 pe-5 block w-full border-2 dark:bg-slate-700  border-gray-200 bg-white rounded-lg text-md font-medium focus:border-green-500 focus:border-1 focus:ring-green-500 focus:outline-none"
               value={data.id_penyakit || ""}
               onChange={handleInput}
               required
@@ -134,7 +134,7 @@ const AddSolusi = () => {
           </div>
 
           <div className="">
-            <label className="block text-md font-semibold leading-6 text-gray-900 my-2  ">
+            <label className="block text-md font-semibold leading-6 text-gray-900 my-2 dark:text-white">
               Solusi
             </label>
 
@@ -144,12 +144,12 @@ const AddSolusi = () => {
               placeholder="Solusi"
               value={data.solusi}
               onChange={handleInput}
-              className=" h-48 py-3 ps-4 pe-10 block w-full border-2 border-gray-200 bg-white rounded-lg text-md font-medium focus:border-blue-500 focus:outline-none"
+              className=" h-48 py-3 ps-4 pe-10 block w-full border-2 border-gray-200 dark:bg-slate-700  bg-white rounded-lg text-md font-medium focus:border-green-500 focus:outline-none"
               required
             />
           </div>
           <button
-            className="font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-5 bg-blue-500 hover:bg-blue-800 text-white w-full"
+            className="font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-5 bg-green-500 hover:bg-green-800 text-white w-full"
             type="submit"
           >
             Tambah

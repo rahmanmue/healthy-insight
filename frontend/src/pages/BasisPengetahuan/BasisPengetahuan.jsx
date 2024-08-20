@@ -107,7 +107,7 @@ const BasisPengetahuan = () => {
       <div className="flex justify-between mb-5">
         <h1 className="text-3xl font-bold">Basis Pengetahuan</h1>
         <Link
-          className="bg-blue-500 flex items-center gap-1 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg uppercase focus:outline-none focus:shadow-outline"
+          className="bg-green-500 flex items-center gap-1 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg uppercase focus:outline-none focus:shadow-outline"
           to="/admin/basis-pengetahuan/add"
         >
           <IoMdAdd className="text-xl" /> Pengetahuan
@@ -162,7 +162,7 @@ const BasisPengetahuan = () => {
                           {gejalaIndex === 0 && (
                             <td
                               rowSpan={item.gejala.length}
-                              className="px-6 py-4 whitespace-nowrap font-semibold text-md text-center text-gray-800"
+                              className="px-6 py-4 whitespace-nowrap font-semibold text-md text-center text-gray-800 dark:text-white"
                             >
                               {item.kode_basis_pengetahuan}
                               <span className="block text-sm font-medium">
@@ -170,13 +170,13 @@ const BasisPengetahuan = () => {
                               </span>
                             </td>
                           )}
-                          <td className="px-6 py-4 whitespace-wrap text-md text-gray-800">
+                          <td className="px-6 py-4 whitespace-wrap text-md text-gray-800 dark:text-white">
                             {gejala.gejala}
                           </td>
                           {gejalaIndex === 0 && (
                             <td
                               rowSpan={item.gejala.length}
-                              className="px-6 py-4 whitespace-nowrap text-md text-center text-gray-800 font-bold "
+                              className="px-6 py-4 whitespace-nowrap text-md text-center text-gray-800 dark:text-white font-bold "
                             >
                               <div className="flex flex-col gap-2 flex-wrap justify-center">
                                 <button
