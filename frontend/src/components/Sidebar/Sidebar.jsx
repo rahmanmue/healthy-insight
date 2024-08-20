@@ -1,25 +1,26 @@
 import { useContext } from "react";
 import { SidebarContext } from "../../contexts/SidebarContext";
-import { FaHome, FaRegUser } from "react-icons/fa";
+import { FaRegUser } from "react-icons/fa";
 import {
   MdLogin,
   // MdAppRegistration,
   MdOutlineLogout,
-  MdOutlineHealthAndSafety,
-  MdOutlineCases,
+  MdOutlineInsights,
 } from "react-icons/md";
-import { RiHealthBookLine } from "react-icons/ri";
-import { GiHealing } from "react-icons/gi";
-import { TbHealthRecognition } from "react-icons/tb";
 import { NavLink } from "react-router-dom";
 import { AuthContenxt } from "../../contexts/AuthContext";
 import { AiOutlineSolution } from "react-icons/ai";
 import Swal from "sweetalert2";
 import { SiConsul } from "react-icons/si";
+import { SiPowerpages } from "react-icons/si";
+import { TbHealthRecognition } from "react-icons/tb";
+import { GoGitMergeQueue } from "react-icons/go";
+import { CiMedicalCross } from "react-icons/ci";
+import { CiMedicalMask } from "react-icons/ci";
 
 const menuUser = [
   {
-    icon: <FaHome />,
+    icon: <SiPowerpages />,
     menu: "Home",
     toLink: "/home",
   },
@@ -30,7 +31,7 @@ const menuUser = [
   },
   {
     icon: <MdLogin />,
-    menu: "Login as Admin",
+    menu: "Login Admin",
     toLink: "/login",
   },
   // {
@@ -41,12 +42,12 @@ const menuUser = [
 ];
 const menuAdmin = [
   {
-    icon: <RiHealthBookLine />,
+    icon: <CiMedicalCross />,
     menu: "Penyakit",
     toLink: "/admin/penyakit",
   },
   {
-    icon: <GiHealing />,
+    icon: <CiMedicalMask />,
     menu: "Gejala",
     toLink: "/admin/gejala",
   },
@@ -56,14 +57,14 @@ const menuAdmin = [
     toLink: "/admin/solusi",
   },
   {
-    icon: <MdOutlineHealthAndSafety />,
-    menu: "Basis Pengetahuan",
-    toLink: "/admin/basis-pengetahuan",
-  },
-  {
-    icon: <MdOutlineCases />,
+    icon: <GoGitMergeQueue />,
     menu: "Data Kasus",
     toLink: "/admin/kasus",
+  },
+  {
+    icon: <TbHealthRecognition />,
+    menu: "Basis Pengetahuan",
+    toLink: "/admin/basis-pengetahuan",
   },
   {
     icon: <FaRegUser />,
@@ -94,22 +95,23 @@ const Sidebar = () => {
   return (
     <div
       className={`${
-        isOpen ? "w-1/5" : "w-0"
-      } min-h-screen max-h-max  bg-gray-800 text-white transition-all duration-300 overflow-hidden`}
+        isOpen ? "lg:w-1/5 inset-0 w-full h-full z-50 " : "w-0"
+      } min-h-screen max-h-max  dark:bg-slate-800 bg-white transition-all duration-300 overflow-hidden `}
     >
-      <div className="flex items-center justify-center py-4 px-2">
-        <TbHealthRecognition className="text-white text-7xl mx-4" />
-        <h1 className="text-white text-3xl font-semibold md:text-md sm:text-lg">
-          Stunting Diagnosis
-        </h1>
+      <div className="flex items-center justify-start py-4 mx-4">
+        <MdOutlineInsights className="text-green-500 text-7xl me-4" />
+        <div className="text-green-700 dark:text-white text-xl font-semibold md:text-md sm:text-lg">
+          Healthy <span className="font-bold text-2xl">Insight</span>
+        </div>
       </div>
       <ul className="flex flex-col justify-start p-4">
         {role === "admin"
           ? menuAdmin.map((item, index) => (
               <NavLink
                 className={({ isActive }) =>
-                  `font-semibold px-4 py-2 md:text-md sm:text-lg hover:bg-gray-700 cursor-pointer flex items-center gap-2 text-lg hover:scale-110 duration-300 ${
-                    isActive && "bg-gray-700"
+                  `font-light px-4 py-2 md:text-md sm:text-lg hover:bg-green-200 hover:text-green-800 dark:text-white dark:hover:bg-slate-700  cursor-pointer flex items-center gap-2 text-lg hover:scale-110 duration-300 ${
+                    isActive &&
+                    "dark:text-white dark:bg-slate-700 bg-green-200 text-green-800"
                   }`
                 }
                 key={index}
@@ -121,8 +123,9 @@ const Sidebar = () => {
           : menuUser.map((item, index) => (
               <NavLink
                 className={({ isActive }) =>
-                  `font-semibold px-4 py-2 md:text-md sm:text-lg hover:bg-gray-700 cursor-pointer flex items-center gap-2 text-lg hover:scale-110 duration-300 ${
-                    isActive && "bg-gray-700"
+                  `font-light px-4 py-2 md:text-md sm:text-lg hover:bg-green-200 hover:text-green-800 dark:text-white dark:hover:bg-slate-700  cursor-pointer flex items-center gap-2 text-lg hover:scale-110 duration-300 ${
+                    isActive &&
+                    "dark:text-white dark:bg-slate-700 bg-green-200 text-green-800"
                   }`
                 }
                 key={index}
@@ -134,7 +137,7 @@ const Sidebar = () => {
 
         {role === "admin" || role === "user" ? (
           <div
-            className="font-semibold px-4 py-2 md:text-md sm:text-lg hover:bg-gray-700 cursor-pointer flex items-center gap-2 text-lg hover:scale-110 duration-300"
+            className="font-light px-4 py-2 md:text-md sm:text-lg hover:bg-green-200 hover:text-green-800 dark:hover:bg-slate-700 dark:text-white cursor-pointer flex items-center gap-2 text-lg hover:scale-110 duration-300"
             onClick={handleShowLogout}
           >
             <MdOutlineLogout /> Logout
@@ -143,6 +146,13 @@ const Sidebar = () => {
           " "
         )}
       </ul>
+      {/* 
+      <div
+        className="absolute top-0 right-0 p-4 cursor-pointer"
+        onClick={toggleSidebar}
+      >
+        Klik
+      </div> */}
     </div>
   );
 };

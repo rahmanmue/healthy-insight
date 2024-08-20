@@ -6,7 +6,7 @@ const Input = ({ label, name, type, placeholder, ...restProps }) => {
   return (
     <div className="mb-4">
       <label
-        className="block text-md font-semibold leading-6 text-gray-900 my-2"
+        className="block text-md font-semibold leading-6 text-gray-900 my-2 dark:text-white"
         htmlFor={name}
       >
         {label}
@@ -14,7 +14,7 @@ const Input = ({ label, name, type, placeholder, ...restProps }) => {
       {type === "password" ? (
         <div className="relative">
           <input
-            className="py-3 ps-4 pe-10 block w-full border-2 border-gray-200 focus:outline-none  rounded-lg text-md font-medium focus:ring-blue-500 focus:border-blue-500 disabled:opacity-50 disabled:pointer-events-none"
+            className="py-3 ps-4 pe-10 block w-full border-2 dark:bg-slate-700 border-gray-200 focus:outline-none  rounded-lg text-md font-medium focus:ring-green-500 focus:border-green-500 disabled:opacity-50 disabled:pointer-events-none"
             type={showPassword ? "text" : "password"}
             placeholder={placeholder}
             name={name}
@@ -31,7 +31,7 @@ const Input = ({ label, name, type, placeholder, ...restProps }) => {
       ) : (
         <>
           <input
-            className="py-3 ps-4 pe-5 block w-full border-2 border-gray-200 rounded-lg text-md font-medium focus:border-blue-500 focus:border-1 focus:ring-blue-500 focus:outline-none "
+            className="py-3 ps-4 pe-5 block w-full border-2  dark:bg-slate-700 border-gray-200 rounded-lg text-md font-medium focus:border-green-500 focus:border-1 focus:ring-green-500 focus:outline-none disabled:opacity-50 disabled:pointer-events-none "
             type={type}
             placeholder={placeholder}
             name={name}

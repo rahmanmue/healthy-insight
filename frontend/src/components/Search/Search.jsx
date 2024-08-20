@@ -21,21 +21,21 @@ const Search = ({ handleSearch, handleRefresh, placeholder = "" }) => {
       <form className="flex w-full items-center justify-between space-x-2">
         <button
           onClick={handleClickRefresh}
-          className="bg-cyan-500 text-white py-3 px-4 text-lg font-semibold rounded-md hover:bg-cyan-600"
+          className="bg-green-500 text-white py-3 px-4 text-lg font-semibold rounded-md hover:bg-green-600"
         >
           <IoIosRefresh />
         </button>
         <div className="flex rounded-md overflow-hidden w-3/5">
           <input
             type="text"
-            className="w-full rounded-md border-2 border-gray-200 px-3 py-2 border-r-0 rounded-r-none focus:outline-none focus:border-blue-500"
+            className="w-full rounded-md border-2 dark:bg-slate-700 border-gray-200 px-3 py-2 border-r-0 rounded-r-none focus:outline-none focus:border-green-500"
             placeholder={`Cari ${placeholder}`}
             value={data || ""}
             onChange={(e) => setData(e.target.value)}
           />
           <button
             onClick={handleClickSearch}
-            className="bg-indigo-600 text-white px-4 text-lg font-semibold rounded-r-md hover:bg-indigo-700"
+            className="bg-green-600 text-white px-4 text-lg font-semibold rounded-r-md hover:bg-green-700"
           >
             <FaSearch />
           </button>
