@@ -54,9 +54,9 @@ const Login = () => {
   return (
     <div className="h-full">
       <ToastContainer />
-      <div className="flex items-center gap-5">
-        <img src={Img2} alt="img-4" className="w-1/2" />
-        <form onSubmit={(e) => handleSubmit(e)} className="w-1/2">
+      <div className="flex items-center flex-col lg:flex-row gap-5">
+        <img src={Img2} alt="img-4" className="lg:w-1/2 w-2/3" />
+        <form onSubmit={(e) => handleSubmit(e)} className="lg:w-1/2 w-full">
           <h1 className="text-3xl font-bold my-2">Login Administrator</h1>
           <Input
             label="Email"

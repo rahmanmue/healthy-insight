@@ -3,7 +3,7 @@ import img1 from "../../assets/image/img-1.svg";
 const Home = () => {
   return (
     <>
-      <div className="flex my-3 justify-between items-center">
+      <div className="flex my-3 lg:flex-row flex-col justify-between items-center">
         <div>
           <h1 className="text-4xl font-bold flex gap-3 mb-3">
             <MdOutlineInsights className="text-green-500" /> Healthy Insight
@@ -25,7 +25,11 @@ const Home = () => {
             pengetahuan kami.
           </p>
         </div>
-        <img src={img1} alt="image-1" className="w-1/2" />
+        <img
+          src={img1}
+          alt="image-1"
+          className="lg:w-1/2 w-full order-first lg:order-last "
+        />
       </div>
     </>
   );

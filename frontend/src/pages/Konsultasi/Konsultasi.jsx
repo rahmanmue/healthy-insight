@@ -123,8 +123,8 @@ const Konsultasi = () => {
 
         {/* start */}
 
-        <div className="flex items-center gap-10">
-          <div className="w-1/2">
+        <div className="flex items-center lg:gap-10 gap-5 flex-col lg:flex-row">
+          <div className="lg:w-1/2 w-full">
             <Input
               label="Umur"
               name="umur"
@@ -134,8 +134,8 @@ const Konsultasi = () => {
               onChange={handleInput}
             />
           </div>
-          <div>
-            <label className="block text-md font-semibold leading-6 text-gray-900 dark:text-white mb-2  ">
+          <div className="lg:w-1/2 w-full">
+            <label className="block text-md font-semibold leading-6 text-gray-900 dark:text-white mb-2">
               Jenis Kelamin
             </label>
             <div className="flex items-start gap-4">
