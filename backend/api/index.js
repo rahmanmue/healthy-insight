@@ -28,9 +28,12 @@ app.use(router);
 
 export default async (req, res) => {
   try {
-    await db.sync(); // Setup connection tiap request
-    app(req, res); // Jalankan Express app per request
+    console.log("Attempting to sync database...");
+    await db.sync();
+    console.log("Database sync successful");
+    app(req, res);
   } catch (err) {
-    res.status(500).send("Database connection error");
+    console.error("Error during database sync or request handling:", err);
+    res.status(500).send("Internal server error");
   }
 };
