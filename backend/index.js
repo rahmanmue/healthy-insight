@@ -25,6 +25,7 @@ app.use(
 
 app.use(express.json());
 app.use(router);
+
 const connectDB = async () => {
   try {
     await db.sync();
@@ -44,3 +45,5 @@ const main = async () => {
 };
 
 main();
+
+export default app;
