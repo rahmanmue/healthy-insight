@@ -1,5 +1,6 @@
 import { Sequelize } from "sequelize";
 import dotenv from "dotenv";
+import pg from "pg";
 
 dotenv.config();
 
@@ -15,29 +16,20 @@ dotenv.config();
 // );
 
 // Clever Cloud
-const db = new Sequelize(process.env.POSTGRESQL_URI, {
+const db = new Sequelize(process.env.POSTGRESQL_URL_CV, {
   dialect: "postgres",
   dialectOptions: {
     ssl: {
-      require: true,
-      rejectUnauthorized: false, // Bisa diatur true jika menggunakan sertifikat yang authorized
+      require: true, // Menentukan apakah SSL diperlukan atau tidak
+      rejectUnauthorized: false, // Biasanya diatur ke false di beberapa host
     },
   },
-  logging: false,
   pool: {
-    max: 10,
-    min: 2,
-    acquire: 30000,
-    idle: 10000,
+    max: 10, // Maksimal 10 koneksi bersamaan
+    min: 2, // Minimal 2 koneksi
+    acquire: 30000, // Timeout 30 detik untuk mendapatkan koneksi
+    idle: 10000, // Timeout 10 detik untuk koneksi idle
   },
-  define: {
-    timestamps: false,
-  },
-  retry: {
-    match: [/ETIMEDOUT/],
-    max: 5,
-  },
-  connectTimeout: 30000,
 });
 
 export default db;

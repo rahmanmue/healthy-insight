@@ -26,18 +26,10 @@ app.use(
 app.use(express.json());
 app.use(router);
 
-const connectDB = async () => {
+const main = async () => {
   try {
     await db.sync();
     console.log("Database connected");
-  } catch (err) {
-    console.log(err);
-  }
-};
-
-const main = async () => {
-  try {
-    await connectDB();
     app.listen(port, () => console.log(`Server running on port ${port}`));
   } catch (err) {
     console.log(err);
@@ -45,5 +37,3 @@ const main = async () => {
 };
 
 main();
-
-export default app;
