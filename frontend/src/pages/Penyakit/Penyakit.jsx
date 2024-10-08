@@ -21,7 +21,7 @@ const Penyakit = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [searchData, setSearchData] = useState("");
-  const pageSize = 3;
+  const pageSize = 5;
 
   // show modal
   const [open, setOpen] = useState(false);

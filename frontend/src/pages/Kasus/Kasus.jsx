@@ -14,7 +14,7 @@ const Kasus = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [searchData, setSearchData] = useState("");
-  const pageSize = 1;
+  const pageSize = 3;
 
   const handlePageChange = async (page) => {
     setCurrentPage(page);
